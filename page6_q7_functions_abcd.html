@@ -148,6 +148,7 @@
     gap: 8px;
     margin: 10px 0;
     flex-wrap: wrap;
+    direction: ltr;
   }
 
   .answer-input {
@@ -324,8 +325,8 @@
     <div class="given-box">
       <strong>נתונים:</strong><br>
       בשרטוט מוצגים שני ישרים: <span class="math-expr">f(x)</span> ו-<span class="math-expr">g(x)</span><br>
-      הנקודות: <span class="math-expr">A(0, 12)</span>, <span class="math-expr">C(4, 0)</span>, <span class="math-expr">O</span> היא ראשית הצירים<br>
-      הישר <span class="math-expr">f(x)</span> עובר דרך <span class="math-expr">A</span> ו-<span class="math-expr">C</span><br>
+      הנקודות: <span class="math-expr">D(0, 12)</span>, <span class="math-expr">C(4, 0)</span>, <span class="math-expr">O</span> היא ראשית הצירים<br>
+      הישר <span class="math-expr">f(x)</span> עובר דרך <span class="math-expr">D</span> ו-<span class="math-expr">C</span><br>
       הישר <span class="math-expr">g(x)</span> עובר דרך <span class="math-expr">B</span> ו-<span class="math-expr">E</span><br>
       <span class="math-expr">B</span> היא נקודת החיתוך של שני הישרים
     </div>
@@ -336,7 +337,7 @@
         <div class="question-label">א. מצאו את הפונקציה f(x)</div>
         <div class="question-text">רשמו את המקדמים:</div>
         <div class="answer-row">
-          <span class="math-expr">f(x) = </span>
+          <span class="math-expr">f(x) = -</span>
           <input type="text" class="answer-input" id="qa-m" placeholder="m" maxlength="4" style="width:60px">
           <span class="math-expr">x + </span>
           <input type="text" class="answer-input" id="qa-b" placeholder="b" maxlength="4" style="width:60px">
@@ -406,9 +407,9 @@
 <script>
 const hintsA = [
   'השיפוע m = (y2-y1)/(x2-x1)',
-  'נקודות: A(0,12) ו-C(4,0)',
+  'זכרו: C(4,0) ו-D(0,12)',
   'm = (0-12)/(4-0) = -12/4 = -3',
-  'b הוא ערך y כאשר x=0, כלומר 12'
+  'התשובה: m=3 (המינוס כבר רשום), b=12'
 ];
 
 const hintsB = [
@@ -426,7 +427,7 @@ const hintsC = [
 ];
 
 const hintsD = [
-  'E היא נקודת החיתוך של g(x) עם ציר y',
+  'זכרו: g(x) = 2x + 2',
   'בציר y, הערך של x הוא תמיד 0',
   'g(0) = 2(0) + 2 = 2',
   'לכן E = (0, 2)'
@@ -466,7 +467,7 @@ function checkFunctionA() {
 
   attempts.a++;
 
-  if (m === '-3' && b === '12') {
+  if (m === '3' && b === '12') {
     markCorrect('qa', item);
     completed.a = true;
     updateProgress();
@@ -576,3 +577,5 @@ document.querySelectorAll('.answer-input').forEach(input => {
 
 </body>
 </html>
+
+

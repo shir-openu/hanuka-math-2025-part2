@@ -783,15 +783,19 @@
 
         function checkStatement(letter, userAnswer) {
             if (answered[letter]) return;
-            answered[letter] = true;
 
             const isCorrect = userAnswer === correctAnswers[letter];
             const card = document.getElementById(`statement-${letter}`);
             const feedback = document.getElementById(`feedback-${letter}`);
             const buttons = card.querySelectorAll('.answer-btn');
+            // Remove previous classes
+            buttons.forEach(btn => {
+                btn.classList.remove('selected-correct', 'selected-incorrect');
+            });
+            card.classList.remove('correct', 'incorrect');
+            feedback.classList.remove('show', 'correct', 'incorrect');
 
             buttons.forEach(btn => {
-                btn.disabled = true;
                 if (btn.textContent === 'נכון' && userAnswer === true) {
                     btn.classList.add(isCorrect ? 'selected-correct' : 'selected-incorrect');
                 } else if (btn.textContent === 'לא נכון' && userAnswer === false) {
@@ -805,11 +809,13 @@
             feedback.classList.add('show', isCorrect ? 'correct' : 'incorrect');
 
             if (isCorrect) {
+                answered[letter] = true;
                 correctCount++;
                 updateScore();
+                buttons.forEach(btn => btn.disabled = true);
+                checkCompletion();
             }
 
-            checkCompletion();
         }
 
         function checkBalls() {
@@ -840,6 +846,8 @@
                 answered.balls = true;
                 correctCount++;
                 updateScore();
+                buttons.forEach(btn => btn.disabled = true);
+                checkCompletion();
                 feedback.textContent = 'מצוין! קבוצה א\' מקבלת 6 כדורים וקבוצה ב\' מקבלת 4 כדורים.';
                 feedback.classList.add('show', 'correct');
                 feedback.classList.remove('incorrect');
@@ -892,8 +900,11 @@
             });
 
             if (isCorrect) {
+                answered[letter] = true;
                 correctCount++;
                 updateScore();
+                buttons.forEach(btn => btn.disabled = true);
+                checkCompletion();
                 feedback.textContent = 'נכון מאוד! כופלים את היחס 3:2 ב-2 ומקבלים 6:4, שזה בדיוק מספר הכדורים לכל קבוצה!';
                 feedback.classList.add('show', 'correct');
             } else {

@@ -570,7 +570,7 @@ const tfAnswers = {
 };
 
 const hints = {
-  'f1': ['חשבו את השיפוע: (y2-y1)/(x2-x1)', 'השיפוע הוא -1/2 = -0.5', 'חיתוך עם Y הוא 2'],
+  'f1': ['m = (y2-y1)/(x2-x1) = (2-0)/(0-4) = -0.5', 'השיפוע הוא -1/2 = -0.5', 'חיתוך עם Y הוא 2'],
   'f2': ['חשבו את השיפוע: (12-0)/(0-(-1))', 'השיפוע הוא 12', 'חיתוך עם Y הוא 12'],
   'h1': ['ישר אופקי: y = קבוע', 'הערך y של נקודה B הוא...?'],
   'h2': ['ישר אנכי: x = קבוע', 'הערך x של נקודה C הוא...?']
@@ -602,12 +602,6 @@ function checkTF(id, isCorrectButton, btn) {
     btn.classList.add('wrong-answer');
     resultSpan.textContent = '✗';
     resultSpan.style.color = 'var(--red)';
-    // Show which was correct
-    buttons.forEach(b => {
-      if ((b.textContent === 'נכון' && correctAnswer) || (b.textContent === 'לא נכון' && !correctAnswer)) {
-        b.classList.add('correct-answer');
-      }
-    });
     explainBox.classList.add('show');
   }
 }
