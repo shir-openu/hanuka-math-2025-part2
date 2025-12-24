@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>שאלה 7 - פונקציות (ה-ח)</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --ink: #1a1a1a;
+    --panel: #f8f9fa;
+    --border: #dee2e6;
+    --purple: #7c3aed;
+    --green: #22c55e;
+    --orange: #f59e0b;
+    --teal: #14b8a6;
+    --cyan: #06b6d4;
+    --yellow: #eab308;
+    --red: #ef4444;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+    font-size: 18px;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 950px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .title {
+    text-align: center;
+    font-size: 28px;
+    color: var(--ink);
+    margin-bottom: 20px;
+    text-decoration: underline;
+  }
+
+  .exercise {
+    background: var(--panel);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 25px;
+  }
+
+  .exercise-title {
+    font-size: 22px;
+    color: var(--purple);
+    margin-bottom: 15px;
+    font-weight: bold;
+  }
+
+  .drawing-container {
+    display: flex;
+    justify-content: center;
+    margin: 15px 0;
+    background: white;
+    border-radius: 12px;
+    padding: 10px;
+  }
+
+  .drawing-container img {
+    max-width: 100%;
+    max-height: 320px;
+  }
+
+  .info-box {
+    background: rgba(6, 182, 212, 0.1);
+    border: 2px solid var(--cyan);
+    border-radius: 10px;
+    padding: 12px 15px;
+    margin: 15px 0;
+    font-size: 15px;
+  }
+
+  .info-box h4 {
+    margin: 0 0 8px 0;
+    color: var(--cyan);
+  }
+
+  .question-section {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 18px;
+    transition: all 0.3s;
+  }
+
+  .question-section.correct {
+    border-color: var(--green);
+    background: rgba(34, 197, 94, 0.08);
+  }
+
+  .question-section.hint {
+    border-color: var(--orange);
+  }
+
+  .section-title {
+    color: var(--purple);
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+
+  .tf-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px;
+    margin: 10px 0;
+    background: var(--panel);
+    border-radius: 8px;
+    flex-wrap: wrap;
+  }
+
+  .tf-statement {
+    flex: 1;
+    min-width: 200px;
+    font-size: 17px;
+  }
+
+  .tf-buttons {
+    display: flex;
+    gap: 8px;
+  }
+
+  .tf-btn {
+    padding: 8px 20px;
+    font-size: 16px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: bold;
+  }
+
+  .tf-btn:hover {
+    border-color: var(--purple);
+  }
+
+  .tf-btn.selected-true {
+    background: var(--green);
+    color: white;
+    border-color: var(--green);
+  }
+
+  .tf-btn.selected-false {
+    background: var(--red);
+    color: white;
+    border-color: var(--red);
+  }
+
+  .tf-btn.correct-answer {
+    background: var(--green);
+    color: white;
+    border-color: var(--green);
+  }
+
+  .tf-btn.wrong-answer {
+    background: var(--red);
+    color: white;
+    border-color: var(--red);
+  }
+
+  .tf-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
+  .tf-result {
+    font-size: 18px;
+    font-weight: bold;
+    margin-right: 10px;
+  }
+
+  .math-expr {
+    direction: ltr;
+    display: inline;
+    font-family: 'Times New Roman', serif;
+    font-size: 20px;
+  }
+
+  .input-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 12px 0;
+    flex-wrap: wrap;
+  }
+
+  .answer-input {
+    width: 150px;
+    padding: 10px;
+    font-size: 18px;
+    text-align: center;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    color: var(--ink);
+    direction: ltr;
+  }
+
+  .answer-input:focus {
+    outline: none;
+    border-color: var(--cyan);
+  }
+
+  .answer-input.correct {
+    border-color: var(--green);
+    background: rgba(34, 197, 94, 0.15);
+  }
+
+  .answer-input.wrong {
+    border-color: var(--red);
+    animation: shake 0.3s;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+  }
+
+  .check-btn {
+    padding: 10px 25px;
+    font-size: 17px;
+    border: none;
+    border-radius: 8px;
+    background: var(--purple);
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  .check-btn:hover {
+    background: #6d28d9;
+  }
+
+  .check-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+
+  .hint-box {
+    margin-top: 12px;
+    padding: 12px;
+    background: rgba(245, 158, 11, 0.15);
+    border: 2px solid var(--orange);
+    border-radius: 8px;
+    font-size: 15px;
+    color: #92400e;
+    display: none;
+  }
+
+  .hint-box.show {
+    display: block;
+    animation: fadeIn 0.3s;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .success-msg {
+    color: var(--green);
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
+    display: none;
+  }
+
+  .success-msg.show {
+    display: block;
+  }
+
+  .explanation-box {
+    margin-top: 12px;
+    padding: 12px;
+    background: rgba(34, 197, 94, 0.1);
+    border: 2px solid var(--green);
+    border-radius: 8px;
+    font-size: 15px;
+    color: #166534;
+    display: none;
+  }
+
+  .explanation-box.show {
+    display: block;
+    animation: fadeIn 0.3s;
+  }
+
+  .order-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 15px 0;
+  }
+
+  .order-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .order-select {
+    padding: 10px 15px;
+    font-size: 17px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    min-width: 150px;
+  }
+
+  .order-select:focus {
+    outline: none;
+    border-color: var(--cyan);
+  }
+
+  .celebration {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  .confetti {
+    position: absolute;
+    width: 12px; height: 12px;
+    border-radius: 2px;
+    animation: fall 3s ease-out forwards;
+  }
+
+  @keyframes fall {
+    0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="title">שאלה 7 - פונקציות ליניאריות (ה-ח)</div>
+
+  <div class="drawing-container">
+    <img src="page_6_q_7_graph.svg" alt="גרף הפונקציות f(x) ו-g(x)">
+  </div>
+
+  <div class="info-box">
+    <h4>נתונים מהשרטוט:</h4>
+    <ul style="margin: 5px 20px;">
+      <li><span class="math-expr">f(x) = -3x + 12</span> (עוברת דרך C(4,0) ו-D(0,12))</li>
+      <li><span class="math-expr">g(x) = 2x + 2</span> (עוברת דרך A(-1,0), B(2,6), E(0,2))</li>
+      <li>נקודות: A(-1,0), B(2,6), C(4,0), D(0,12), E(0,2), O(0,0)</li>
+    </ul>
+  </div>
+
+  <!-- סעיף ה - נכון/לא נכון -->
+  <div class="exercise">
+    <div class="exercise-title">סעיף ה' - נכון או לא נכון?</div>
+
+    <div class="question-section" id="e1-section">
+      <div class="tf-item">
+        <span class="tf-statement">1. אורך הקטע DE הוא 10 ס"מ</span>
+        <div class="tf-buttons">
+          <button class="tf-btn" onclick="checkTF('e1', true, this)">נכון</button>
+          <button class="tf-btn" onclick="checkTF('e1', false, this)">לא נכון</button>
+        </div>
+        <span class="tf-result" id="e1-result"></span>
+      </div>
+      <div class="explanation-box" id="e1-explain">
+        D(0,12) ו-E(0,2) על ציר Y → <span class="math-expr">DE = |12-2| = 10</span> ✓
+      </div>
+    </div>
+
+    <div class="question-section" id="e2-section">
+      <div class="tf-item">
+        <span class="tf-statement">2. שטח משולש ABC שווה ל-30</span>
+        <div class="tf-buttons">
+          <button class="tf-btn" onclick="checkTF('e2', false, this)">נכון</button>
+          <button class="tf-btn" onclick="checkTF('e2', true, this)">לא נכון</button>
+        </div>
+        <span class="tf-result" id="e2-result"></span>
+      </div>
+      <div class="explanation-box" id="e2-explain">
+        A(-1,0), C(4,0) → בסיס AC = 5<br>
+        גובה = 6 (y של B)<br>
+        <span class="math-expr">שטח = ½ × 5 × 6 = 15</span> (לא 30!)
+      </div>
+    </div>
+
+    <div class="question-section" id="e3-section">
+      <div class="tf-item">
+        <span class="tf-statement">3. <span class="math-expr">f(3) < g(1)</span></span>
+        <div class="tf-buttons">
+          <button class="tf-btn" onclick="checkTF('e3', true, this)">נכון</button>
+          <button class="tf-btn" onclick="checkTF('e3', false, this)">לא נכון</button>
+        </div>
+        <span class="tf-result" id="e3-result"></span>
+      </div>
+      <div class="explanation-box" id="e3-explain">
+        <span class="math-expr">f(3) = -3×3 + 12 = 3</span><br>
+        <span class="math-expr">g(1) = 2×1 + 2 = 4</span><br>
+        <span class="math-expr">3 < 4</span> ✓
+      </div>
+    </div>
+  </div>
+
+  <!-- סעיף ו - משוואות קטעים -->
+  <div class="exercise">
+    <div class="exercise-title">סעיף ו' - מצאו את משוואות הקטעים</div>
+
+    <div class="question-section" id="f1-section">
+      <div class="section-title">משוואת הקטע CE:</div>
+      <p style="font-size: 15px; color: #666;">C(4,0) ו-E(0,2)</p>
+      <div class="input-row">
+        <span class="math-expr">y = </span>
+        <input type="text" class="answer-input" id="f1" placeholder="-0.5x+2" style="width: 180px;">
+        <button class="check-btn" onclick="checkEquation('f1')">בדוק</button>
+      </div>
+      <div class="hint-box" id="hint-f1"></div>
+      <div class="success-msg" id="success-f1">✓ נכון!</div>
+      <div class="explanation-box" id="explain-f1">
+        שיפוע: <span class="math-expr">m = (2-0)/(0-4) = -1/2</span><br>
+        חיתוך עם Y: 2<br>
+        לכן: <span class="math-expr">y = -0.5x + 2</span>
+      </div>
+    </div>
+
+    <div class="question-section" id="f2-section">
+      <div class="section-title">משוואת הקטע AD:</div>
+      <p style="font-size: 15px; color: #666;">A(-1,0) ו-D(0,12)</p>
+      <div class="input-row">
+        <span class="math-expr">y = </span>
+        <input type="text" class="answer-input" id="f2" placeholder="12x+12" style="width: 180px;">
+        <button class="check-btn" onclick="checkEquation('f2')">בדוק</button>
+      </div>
+      <div class="hint-box" id="hint-f2"></div>
+      <div class="success-msg" id="success-f2">✓ נכון!</div>
+      <div class="explanation-box" id="explain-f2">
+        שיפוע: <span class="math-expr">m = (12-0)/(0-(-1)) = 12</span><br>
+        חיתוך עם Y: 12<br>
+        לכן: <span class="math-expr">y = 12x + 12</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- סעיף ז - סדר שטחים -->
+  <div class="exercise">
+    <div class="exercise-title">סעיף ז' - סדרו את השטחים מהקטן לגדול</div>
+
+    <div class="question-section" id="g-section">
+      <p>סדרו את שטחי המשולשים: ΔBDE, ΔCEO, ΔADE</p>
+
+      <div class="info-box" style="font-size: 14px;">
+        <b>רמז:</b> חשבו כל שטח בנפרד:
+        <ul>
+          <li>ΔCEO: O(0,0), C(4,0), E(0,2)</li>
+          <li>ΔADE: בסיס DE=10, מרחק A מציר Y = 1</li>
+          <li>ΔBDE: בסיס DE=10, מרחק B מציר Y = 2</li>
+        </ul>
+      </div>
+
+      <div class="order-container">
+        <div class="order-item">
+          <span>קטן:</span>
+          <select class="order-select" id="g1">
+            <option value="">בחרו...</option>
+            <option value="BDE">ΔBDE</option>
+            <option value="CEO">ΔCEO</option>
+            <option value="ADE">ΔADE</option>
+          </select>
+          <span style="color: #666; font-size: 14px;">(שטח = 4)</span>
+        </div>
+        <div class="order-item">
+          <span>בינוני:</span>
+          <select class="order-select" id="g2">
+            <option value="">בחרו...</option>
+            <option value="BDE">ΔBDE</option>
+            <option value="CEO">ΔCEO</option>
+            <option value="ADE">ΔADE</option>
+          </select>
+          <span style="color: #666; font-size: 14px;">(שטח = 5)</span>
+        </div>
+        <div class="order-item">
+          <span>גדול:</span>
+          <select class="order-select" id="g3">
+            <option value="">בחרו...</option>
+            <option value="BDE">ΔBDE</option>
+            <option value="CEO">ΔCEO</option>
+            <option value="ADE">ΔADE</option>
+          </select>
+          <span style="color: #666; font-size: 14px;">(שטח = 10)</span>
+        </div>
+      </div>
+
+      <button class="check-btn" onclick="checkOrder()">בדוק סדר</button>
+      <div class="hint-box" id="hint-g"></div>
+      <div class="success-msg" id="success-g">✓ נכון! ΔCEO < ΔADE < ΔBDE</div>
+      <div class="explanation-box" id="explain-g">
+        <b>חישוב השטחים:</b><br>
+        • ΔCEO: <span class="math-expr">½ × 4 × 2 = 4</span><br>
+        • ΔADE: <span class="math-expr">½ × 10 × 1 = 5</span><br>
+        • ΔBDE: <span class="math-expr">½ × 10 × 2 = 10</span><br>
+        לכן: <b>4 < 5 < 10</b>
+      </div>
+    </div>
+  </div>
+
+  <!-- סעיף ח - משוואות ישרים מקבילים -->
+  <div class="exercise">
+    <div class="exercise-title">סעיף ח' - השלימו את משוואות הישרים</div>
+
+    <div class="question-section" id="h1-section">
+      <div class="section-title">ישר העובר דרך B ומקביל לציר X:</div>
+      <p style="font-size: 15px; color: #666;">B(2,6) - ישר אופקי</p>
+      <div class="input-row">
+        <span class="math-expr">y = </span>
+        <input type="text" class="answer-input" id="h1" placeholder="?" style="width: 100px;">
+        <button class="check-btn" onclick="checkLine('h1', '6')">בדוק</button>
+      </div>
+      <div class="hint-box" id="hint-h1"></div>
+      <div class="success-msg" id="success-h1">✓ נכון!</div>
+      <div class="explanation-box" id="explain-h1">
+        ישר מקביל לציר X הוא ישר אופקי.<br>
+        הוא עובר דרך B(2,<b>6</b>) → <span class="math-expr">y = 6</span>
+      </div>
+    </div>
+
+    <div class="question-section" id="h2-section">
+      <div class="section-title">ישר העובר דרך C ומקביל לציר Y:</div>
+      <p style="font-size: 15px; color: #666;">C(4,0) - ישר אנכי</p>
+      <div class="input-row">
+        <span class="math-expr">x = </span>
+        <input type="text" class="answer-input" id="h2" placeholder="?" style="width: 100px;">
+        <button class="check-btn" onclick="checkLine('h2', '4')">בדוק</button>
+      </div>
+      <div class="hint-box" id="hint-h2"></div>
+      <div class="success-msg" id="success-h2">✓ נכון!</div>
+      <div class="explanation-box" id="explain-h2">
+        ישר מקביל לציר Y הוא ישר אנכי.<br>
+        הוא עובר דרך C(<b>4</b>,0) → <span class="math-expr">x = 4</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="celebration" id="celebration"></div>
+
+<script>
+// True/False answers: e1=true, e2=false (so correct button is "לא נכון"), e3=true
+const tfAnswers = {
+  'e1': true,   // DE=10 is TRUE
+  'e2': false,  // Area=30 is FALSE (actually 15)
+  'e3': true    // f(3)<g(1) is TRUE
+};
+
+const hints = {
+  'f1': ['חשבו את השיפוע: (y2-y1)/(x2-x1)', 'השיפוע הוא -1/2 = -0.5', 'חיתוך עם Y הוא 2'],
+  'f2': ['חשבו את השיפוע: (12-0)/(0-(-1))', 'השיפוע הוא 12', 'חיתוך עם Y הוא 12'],
+  'h1': ['ישר אופקי: y = קבוע', 'הערך y של נקודה B הוא...?'],
+  'h2': ['ישר אנכי: x = קבוע', 'הערך x של נקודה C הוא...?']
+};
+
+let attempts = {};
+
+function checkTF(id, isCorrectButton, btn) {
+  const section = document.getElementById(id + '-section');
+  const resultSpan = document.getElementById(id + '-result');
+  const explainBox = document.getElementById(id + '-explain');
+  const buttons = section.querySelectorAll('.tf-btn');
+
+  // Disable all buttons
+  buttons.forEach(b => b.disabled = true);
+
+  const correctAnswer = tfAnswers[id];
+
+  if (isCorrectButton === correctAnswer) {
+    // User clicked the correct button
+    btn.classList.add('correct-answer');
+    resultSpan.textContent = '✓';
+    resultSpan.style.color = 'var(--green)';
+    section.classList.add('correct');
+    explainBox.classList.add('show');
+    createConfetti();
+  } else {
+    // User clicked wrong button
+    btn.classList.add('wrong-answer');
+    resultSpan.textContent = '✗';
+    resultSpan.style.color = 'var(--red)';
+    // Show which was correct
+    buttons.forEach(b => {
+      if ((b.textContent === 'נכון' && correctAnswer) || (b.textContent === 'לא נכון' && !correctAnswer)) {
+        b.classList.add('correct-answer');
+      }
+    });
+    explainBox.classList.add('show');
+  }
+}
+
+function checkEquation(id) {
+  const input = document.getElementById(id);
+  const section = document.getElementById(id + '-section');
+  const hintBox = document.getElementById('hint-' + id);
+  const successMsg = document.getElementById('success-' + id);
+  const explainBox = document.getElementById('explain-' + id);
+
+  if (!attempts[id]) attempts[id] = 0;
+  attempts[id]++;
+
+  let value = input.value.trim().toLowerCase().replace(/\s+/g, '');
+
+  // Normalize the input
+  value = value.replace(/×/g, '*').replace(/·/g, '*');
+
+  let isCorrect = false;
+
+  if (id === 'f1') {
+    // CE: y = -0.5x + 2 or y = -1/2x + 2 or y = -x/2 + 2
+    isCorrect = value === '-0.5x+2' || value === '-0.5*x+2' ||
+                value === '-1/2x+2' || value === '-1/2*x+2' ||
+                value === '-x/2+2' || value === '-(1/2)x+2' ||
+                value === '2-0.5x' || value === '2-x/2' ||
+                value === '-0,5x+2';
+  } else if (id === 'f2') {
+    // AD: y = 12x + 12
+    isCorrect = value === '12x+12' || value === '12*x+12' ||
+                value === '12(x+1)' || value === '12*(x+1)';
+  }
+
+  if (isCorrect) {
+    input.classList.remove('wrong');
+    input.classList.add('correct');
+    section.classList.add('correct');
+    hintBox.classList.remove('show');
+    successMsg.classList.add('show');
+    explainBox.classList.add('show');
+    input.disabled = true;
+    section.querySelector('.check-btn').disabled = true;
+    createConfetti();
+  } else {
+    input.classList.add('wrong');
+    section.classList.add('hint');
+    setTimeout(() => input.classList.remove('wrong'), 300);
+
+    const hintIndex = Math.min(attempts[id] - 1, hints[id].length - 1);
+    let hintText = '💡 רמז ' + attempts[id] + ': ' + hints[id][hintIndex];
+
+    if (attempts[id] >= 4) {
+      if (id === 'f1') hintText += '<br>🎯 התשובה: -0.5x+2';
+      if (id === 'f2') hintText += '<br>🎯 התשובה: 12x+12';
+    }
+
+    hintBox.innerHTML = hintText;
+    hintBox.classList.add('show');
+    input.value = '';
+    input.focus();
+  }
+}
+
+function checkOrder() {
+  const g1 = document.getElementById('g1').value;
+  const g2 = document.getElementById('g2').value;
+  const g3 = document.getElementById('g3').value;
+  const section = document.getElementById('g-section');
+  const hintBox = document.getElementById('hint-g');
+  const successMsg = document.getElementById('success-g');
+  const explainBox = document.getElementById('explain-g');
+
+  if (!g1 || !g2 || !g3) {
+    hintBox.innerHTML = '💡 נא לבחור משולש בכל שורה';
+    hintBox.classList.add('show');
+    return;
+  }
+
+  // Correct order: CEO (4) < ADE (5) < BDE (10)
+  if (g1 === 'CEO' && g2 === 'ADE' && g3 === 'BDE') {
+    section.classList.add('correct');
+    hintBox.classList.remove('show');
+    successMsg.classList.add('show');
+    explainBox.classList.add('show');
+    document.querySelectorAll('.order-select').forEach(s => s.disabled = true);
+    section.querySelector('.check-btn').disabled = true;
+    createConfetti();
+  } else {
+    section.classList.add('hint');
+    hintBox.innerHTML = '💡 לא נכון. חשבו: שטח משולש = ½ × בסיס × גובה';
+    hintBox.classList.add('show');
+  }
+}
+
+function checkLine(id, correct) {
+  const input = document.getElementById(id);
+  const section = document.getElementById(id + '-section');
+  const hintBox = document.getElementById('hint-' + id);
+  const successMsg = document.getElementById('success-' + id);
+  const explainBox = document.getElementById('explain-' + id);
+
+  if (!attempts[id]) attempts[id] = 0;
+  attempts[id]++;
+
+  const value = input.value.trim();
+
+  if (value === correct) {
+    input.classList.remove('wrong');
+    input.classList.add('correct');
+    section.classList.add('correct');
+    hintBox.classList.remove('show');
+    successMsg.classList.add('show');
+    explainBox.classList.add('show');
+    input.disabled = true;
+    section.querySelector('.check-btn').disabled = true;
+    createConfetti();
+  } else {
+    input.classList.add('wrong');
+    section.classList.add('hint');
+    setTimeout(() => input.classList.remove('wrong'), 300);
+
+    const hintIndex = Math.min(attempts[id] - 1, (hints[id] || []).length - 1);
+    let hintText = '💡 רמז: ' + (hints[id] ? hints[id][hintIndex] : 'נסו שוב');
+
+    if (attempts[id] >= 3) {
+      hintText += '<br>🎯 התשובה: ' + correct;
+    }
+
+    hintBox.innerHTML = hintText;
+    hintBox.classList.add('show');
+    input.value = '';
+    input.focus();
+  }
+}
+
+function createConfetti() {
+  const c = document.getElementById('celebration');
+  const colors = ['#fde047', '#4ade80', '#2dd4bf', '#a3e635', '#22d3ee', '#f472b6', '#a78bfa'];
+  for (let i = 0; i < 35; i++) {
+    const d = document.createElement('div');
+    d.className = 'confetti';
+    d.style.left = Math.random() * 100 + '%';
+    d.style.background = colors[Math.floor(Math.random() * colors.length)];
+    d.style.animationDelay = Math.random() * 0.5 + 's';
+    c.appendChild(d);
+  }
+  setTimeout(() => { c.innerHTML = ''; }, 3000);
+}
+
+// Enter key support
+document.querySelectorAll('.answer-input').forEach(input => {
+  input.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      const btn = input.parentElement.querySelector('.check-btn');
+      if (btn && !btn.disabled) btn.click();
+    }
+  });
+});
+</script>
+
+</body>
+</html>

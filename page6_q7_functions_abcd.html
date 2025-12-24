@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>שאלה 7 - פונקציות לינאריות (חלק א)</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --ink: #1a1a1a;
+    --panel: #f8f9fa;
+    --border: #dee2e6;
+    --purple: #7c3aed;
+    --green: #22c55e;
+    --orange: #f59e0b;
+    --teal: #14b8a6;
+    --cyan: #06b6d4;
+    --yellow: #eab308;
+    --red: #ef4444;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+    font-size: 20px;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 950px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .title {
+    text-align: center;
+    font-size: 32px;
+    color: var(--ink);
+    margin-bottom: 10px;
+    text-decoration: underline;
+  }
+
+  .subtitle {
+    text-align: center;
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 25px;
+  }
+
+  .exercise {
+    background: var(--panel);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 30px;
+  }
+
+  .drawing-container {
+    display: flex;
+    justify-content: center;
+    margin: 15px 0;
+    background: white;
+    border-radius: 12px;
+    padding: 10px;
+  }
+
+  .drawing-container img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+
+  .given-box {
+    background: rgba(124, 58, 237, 0.1);
+    border: 2px solid var(--purple);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin: 15px 0;
+    font-size: 18px;
+    line-height: 1.8;
+  }
+
+  .given-box strong {
+    color: var(--purple);
+  }
+
+  .questions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+  }
+
+  @media (max-width: 700px) {
+    .questions-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .question-item {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    text-align: center;
+    transition: all 0.3s;
+  }
+
+  .question-item.correct {
+    border-color: var(--green);
+    background: rgba(34, 197, 94, 0.1);
+  }
+
+  .question-item.hint {
+    border-color: var(--orange);
+    background: rgba(245, 158, 11, 0.05);
+  }
+
+  .question-label {
+    color: var(--purple);
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 12px;
+  }
+
+  .question-text {
+    font-size: 17px;
+    color: #444;
+    margin-bottom: 12px;
+  }
+
+  .math-expr {
+    direction: ltr;
+    display: inline;
+    font-family: 'Times New Roman', serif;
+    font-size: 22px;
+  }
+
+  .answer-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 10px 0;
+    flex-wrap: wrap;
+  }
+
+  .answer-input {
+    width: 70px;
+    padding: 10px;
+    font-size: 20px;
+    text-align: center;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    color: var(--ink);
+  }
+
+  .answer-input:focus {
+    outline: none;
+    border-color: var(--cyan);
+  }
+
+  .answer-input.correct {
+    border-color: var(--green);
+    background: rgba(34, 197, 94, 0.15);
+  }
+
+  .answer-input.wrong {
+    border-color: var(--red);
+    animation: shake 0.3s;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+  }
+
+  .check-btn {
+    padding: 10px 24px;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    background: var(--purple);
+    color: white;
+    cursor: pointer;
+    margin-top: 12px;
+    font-weight: bold;
+    transition: all 0.2s;
+  }
+
+  .check-btn:hover {
+    background: #6d28d9;
+    transform: translateY(-2px);
+  }
+
+  .check-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .hint-box {
+    margin-top: 12px;
+    padding: 12px;
+    background: rgba(245, 158, 11, 0.15);
+    border: 2px solid var(--orange);
+    border-radius: 8px;
+    font-size: 16px;
+    color: #92400e;
+    display: none;
+    text-align: right;
+  }
+
+  .hint-box.show {
+    display: block;
+    animation: fadeIn 0.3s;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .success-msg {
+    color: var(--green);
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 10px;
+    display: none;
+  }
+
+  .success-msg.show {
+    display: block;
+  }
+
+  .celebration {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  .confetti {
+    position: absolute;
+    width: 12px; height: 12px;
+    border-radius: 2px;
+    animation: fall 3s ease-out forwards;
+  }
+
+  @keyframes fall {
+    0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  .progress-bar {
+    background: var(--border);
+    border-radius: 10px;
+    height: 12px;
+    margin: 20px 0;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    background: linear-gradient(90deg, var(--purple), var(--cyan));
+    height: 100%;
+    width: 0%;
+    transition: width 0.5s ease;
+    border-radius: 10px;
+  }
+
+  .progress-text {
+    text-align: center;
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 10px;
+  }
+
+  .completion-box {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(20, 184, 166, 0.1));
+    border: 3px solid var(--green);
+    border-radius: 16px;
+    padding: 25px;
+    text-align: center;
+    display: none;
+    margin-top: 20px;
+  }
+
+  .completion-box.show {
+    display: block;
+    animation: fadeIn 0.5s;
+  }
+
+  .completion-title {
+    font-size: 28px;
+    color: var(--green);
+    margin-bottom: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="title">שאלה 7 - פונקציות לינאריות (חלק א)</div>
+  <div class="subtitle">סעיפים א-ד</div>
+
+  <div class="progress-text">התקדמות: <span id="progressCount">0</span>/4</div>
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <div class="exercise">
+    <div class="drawing-container">
+      <img src="page_6_q_7_graph.svg" alt="גרף פונקציות f(x) ו-g(x)">
+    </div>
+
+    <div class="given-box">
+      <strong>נתונים:</strong><br>
+      בשרטוט מוצגים שני ישרים: <span class="math-expr">f(x)</span> ו-<span class="math-expr">g(x)</span><br>
+      הנקודות: <span class="math-expr">A(0, 12)</span>, <span class="math-expr">C(4, 0)</span>, <span class="math-expr">O</span> היא ראשית הצירים<br>
+      הישר <span class="math-expr">f(x)</span> עובר דרך <span class="math-expr">A</span> ו-<span class="math-expr">C</span><br>
+      הישר <span class="math-expr">g(x)</span> עובר דרך <span class="math-expr">B</span> ו-<span class="math-expr">E</span><br>
+      <span class="math-expr">B</span> היא נקודת החיתוך של שני הישרים
+    </div>
+
+    <div class="questions-grid">
+      <!-- סעיף א -->
+      <div class="question-item" id="qa-item">
+        <div class="question-label">א. מצאו את הפונקציה f(x)</div>
+        <div class="question-text">רשמו את המקדמים:</div>
+        <div class="answer-row">
+          <span class="math-expr">f(x) = </span>
+          <input type="text" class="answer-input" id="qa-m" placeholder="m" maxlength="4" style="width:60px">
+          <span class="math-expr">x + </span>
+          <input type="text" class="answer-input" id="qa-b" placeholder="b" maxlength="4" style="width:60px">
+        </div>
+        <button class="check-btn" onclick="checkFunctionA()">בדוק</button>
+        <div class="hint-box" id="hint-qa"></div>
+        <div class="success-msg" id="success-qa">&#10003; נכון! f(x) = -3x + 12</div>
+      </div>
+
+      <!-- סעיף ב -->
+      <div class="question-item" id="qb-item">
+        <div class="question-label">ב. מצאו את הנקודה B</div>
+        <div class="question-text">נקודת החיתוך של f(x) ו-g(x):</div>
+        <div class="answer-row">
+          <span class="math-expr">B = (</span>
+          <input type="text" class="answer-input" id="qb-x" placeholder="x" maxlength="4" style="width:60px">
+          <span class="math-expr">,</span>
+          <input type="text" class="answer-input" id="qb-y" placeholder="y" maxlength="4" style="width:60px">
+          <span class="math-expr">)</span>
+        </div>
+        <button class="check-btn" onclick="checkPointB()">בדוק</button>
+        <div class="hint-box" id="hint-qb"></div>
+        <div class="success-msg" id="success-qb">&#10003; נכון! B = (2, 6)</div>
+      </div>
+
+      <!-- סעיף ג -->
+      <div class="question-item" id="qc-item">
+        <div class="question-label">ג. מצאו את הפונקציה g(x)</div>
+        <div class="question-text">רשמו את המקדמים:</div>
+        <div class="answer-row">
+          <span class="math-expr">g(x) = </span>
+          <input type="text" class="answer-input" id="qc-m" placeholder="m" maxlength="4" style="width:60px">
+          <span class="math-expr">x + </span>
+          <input type="text" class="answer-input" id="qc-b" placeholder="b" maxlength="4" style="width:60px">
+        </div>
+        <button class="check-btn" onclick="checkFunctionG()">בדוק</button>
+        <div class="hint-box" id="hint-qc"></div>
+        <div class="success-msg" id="success-qc">&#10003; נכון! g(x) = 2x + 2</div>
+      </div>
+
+      <!-- סעיף ד -->
+      <div class="question-item" id="qd-item">
+        <div class="question-label">ד. מצאו את הנקודה E</div>
+        <div class="question-text">נקודת החיתוך של g(x) עם ציר y:</div>
+        <div class="answer-row">
+          <span class="math-expr">E = (</span>
+          <input type="text" class="answer-input" id="qd-x" placeholder="x" maxlength="4" style="width:60px">
+          <span class="math-expr">,</span>
+          <input type="text" class="answer-input" id="qd-y" placeholder="y" maxlength="4" style="width:60px">
+          <span class="math-expr">)</span>
+        </div>
+        <button class="check-btn" onclick="checkPointE()">בדוק</button>
+        <div class="hint-box" id="hint-qd"></div>
+        <div class="success-msg" id="success-qd">&#10003; נכון! E = (0, 2)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="completion-box" id="completionBox">
+    <div class="completion-title">&#127881; כל הכבוד! סיימת את חלק א &#127881;</div>
+    <div>השלמת את כל 4 הסעיפים בהצלחה!</div>
+  </div>
+</div>
+
+<div class="celebration" id="celebration"></div>
+
+<script>
+const hintsA = [
+  'השיפוע m = (y2-y1)/(x2-x1)',
+  'נקודות: A(0,12) ו-C(4,0)',
+  'm = (0-12)/(4-0) = -12/4 = -3',
+  'b הוא ערך y כאשר x=0, כלומר 12'
+];
+
+const hintsB = [
+  'B נמצאת על הישר f(x)',
+  'הציבו בפונקציה f(x) = -3x + 12',
+  'מהגרף: x של B הוא 2',
+  'f(2) = -3(2) + 12 = 6'
+];
+
+const hintsC = [
+  'g(x) עוברת דרך B(2,6) ו-E על ציר y',
+  'מהגרף: E נמצאת ב-y=2',
+  'השיפוע: m = (6-2)/(2-0) = 4/2 = 2',
+  'b = 2 (חיתוך עם ציר y)'
+];
+
+const hintsD = [
+  'E היא נקודת החיתוך של g(x) עם ציר y',
+  'בציר y, הערך של x הוא תמיד 0',
+  'g(0) = 2(0) + 2 = 2',
+  'לכן E = (0, 2)'
+];
+
+let attempts = {a: 0, b: 0, c: 0, d: 0};
+let completed = {a: false, b: false, c: false, d: false};
+
+function updateProgress() {
+  const count = Object.values(completed).filter(v => v).length;
+  document.getElementById('progressCount').textContent = count;
+  document.getElementById('progressFill').style.width = (count * 25) + '%';
+
+  if (count === 4) {
+    document.getElementById('completionBox').classList.add('show');
+    createConfetti();
+  }
+}
+
+function showHint(id, hints, attempt) {
+  const hintBox = document.getElementById('hint-' + id);
+  const hintIndex = Math.min(attempt - 1, hints.length - 1);
+  let hintText = '&#128161; רמז ' + attempt + ': ' + hints[hintIndex];
+
+  if (attempt >= 5) {
+    hintText += '<br>&#127919; הצג את התשובה הנכונה למעלה';
+  }
+
+  hintBox.innerHTML = hintText;
+  hintBox.classList.add('show');
+}
+
+function checkFunctionA() {
+  const m = document.getElementById('qa-m').value.trim();
+  const b = document.getElementById('qa-b').value.trim();
+  const item = document.getElementById('qa-item');
+
+  attempts.a++;
+
+  if (m === '-3' && b === '12') {
+    markCorrect('qa', item);
+    completed.a = true;
+    updateProgress();
+  } else {
+    markWrong(['qa-m', 'qa-b'], item);
+    showHint('qa', hintsA, attempts.a);
+  }
+}
+
+function checkPointB() {
+  const x = document.getElementById('qb-x').value.trim();
+  const y = document.getElementById('qb-y').value.trim();
+  const item = document.getElementById('qb-item');
+
+  attempts.b++;
+
+  if (x === '2' && y === '6') {
+    markCorrect('qb', item);
+    completed.b = true;
+    updateProgress();
+  } else {
+    markWrong(['qb-x', 'qb-y'], item);
+    showHint('qb', hintsB, attempts.b);
+  }
+}
+
+function checkFunctionG() {
+  const m = document.getElementById('qc-m').value.trim();
+  const b = document.getElementById('qc-b').value.trim();
+  const item = document.getElementById('qc-item');
+
+  attempts.c++;
+
+  if (m === '2' && b === '2') {
+    markCorrect('qc', item);
+    completed.c = true;
+    updateProgress();
+  } else {
+    markWrong(['qc-m', 'qc-b'], item);
+    showHint('qc', hintsC, attempts.c);
+  }
+}
+
+function checkPointE() {
+  const x = document.getElementById('qd-x').value.trim();
+  const y = document.getElementById('qd-y').value.trim();
+  const item = document.getElementById('qd-item');
+
+  attempts.d++;
+
+  if (x === '0' && y === '2') {
+    markCorrect('qd', item);
+    completed.d = true;
+    updateProgress();
+  } else {
+    markWrong(['qd-x', 'qd-y'], item);
+    showHint('qd', hintsD, attempts.d);
+  }
+}
+
+function markCorrect(id, item) {
+  item.classList.remove('hint');
+  item.classList.add('correct');
+  document.getElementById('success-' + id).classList.add('show');
+  document.getElementById('hint-' + id).classList.remove('show');
+  item.querySelectorAll('.answer-input').forEach(inp => {
+    inp.classList.add('correct');
+    inp.disabled = true;
+  });
+  item.querySelector('.check-btn').disabled = true;
+  createConfetti();
+}
+
+function markWrong(inputIds, item) {
+  item.classList.add('hint');
+  inputIds.forEach(id => {
+    const inp = document.getElementById(id);
+    inp.classList.add('wrong');
+    setTimeout(() => inp.classList.remove('wrong'), 300);
+  });
+}
+
+function createConfetti() {
+  const c = document.getElementById('celebration');
+  const colors = ['#fde047', '#4ade80', '#2dd4bf', '#a3e635', '#22d3ee', '#f472b6', '#a78bfa', '#7c3aed'];
+  for (let i = 0; i < 50; i++) {
+    const d = document.createElement('div');
+    d.className = 'confetti';
+    d.style.left = Math.random() * 100 + '%';
+    d.style.background = colors[Math.floor(Math.random() * colors.length)];
+    d.style.animationDelay = Math.random() * 0.5 + 's';
+    c.appendChild(d);
+  }
+  setTimeout(() => { c.innerHTML = ''; }, 3500);
+}
+
+// Enter key support
+document.querySelectorAll('.answer-input').forEach(input => {
+  input.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      const btn = input.closest('.question-item').querySelector('.check-btn');
+      if (!btn.disabled) btn.click();
+    }
+  });
+});
+</script>
+
+</body>
+</html>

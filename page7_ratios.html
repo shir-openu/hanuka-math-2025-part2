@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>עמוד 7 - יחס</title>
+    <style>
+        :root {
+            --primary: #7c3aed;
+            --primary-light: #a78bfa;
+            --primary-dark: #5b21b6;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --bg: #f8f7ff;
+            --card-bg: #ffffff;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --border: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 20px;
+            color: white;
+            box-shadow: 0 10px 40px rgba(124, 58, 237, 0.3);
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .score-bar {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .score-label {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        .problem-setup {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border-right: 5px solid var(--primary);
+        }
+
+        .problem-setup h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .ratio-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, #fce7f3, #f3e8ff);
+            border-radius: 12px;
+            margin-top: 15px;
+        }
+
+        .bead-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .bead {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            box-shadow: inset -3px -3px 6px rgba(0, 0, 0, 0.2),
+                        inset 3px 3px 6px rgba(255, 255, 255, 0.3);
+        }
+
+        .bead.pink {
+            background: linear-gradient(135deg, #f472b6, #ec4899);
+        }
+
+        .bead.purple {
+            background: linear-gradient(135deg, #a78bfa, #8b5cf6);
+        }
+
+        .ratio-text {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .ratio-label {
+            font-size: 1rem;
+            color: var(--text-light);
+        }
+
+        .section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .section h3 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-icon {
+            width: 35px;
+            height: 35px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .statement-card {
+            background: #fafafa;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 15px;
+            border: 2px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .statement-card:hover {
+            border-color: var(--primary-light);
+        }
+
+        .statement-card.correct {
+            border-color: var(--success);
+            background: #ecfdf5;
+        }
+
+        .statement-card.incorrect {
+            border-color: var(--error);
+            background: #fef2f2;
+        }
+
+        .statement-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+
+        .statement-letter {
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .statement-text {
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+
+        .answer-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .answer-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .answer-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            background: #f5f3ff;
+        }
+
+        .answer-btn.selected-correct {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .answer-btn.selected-incorrect {
+            background: var(--error);
+            border-color: var(--error);
+            color: white;
+        }
+
+        .answer-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .feedback {
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .feedback.incorrect {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .hint-btn {
+            background: var(--warning);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .hint-btn:hover {
+            background: #d97706;
+        }
+
+        .hint-text {
+            margin-top: 10px;
+            padding: 12px;
+            background: #fef3c7;
+            border-radius: 8px;
+            color: #92400e;
+            display: none;
+            font-size: 0.95rem;
+        }
+
+        .hint-text.show {
+            display: block;
+        }
+
+        /* Word Problem Section */
+        .word-problem {
+            background: linear-gradient(135deg, #dbeafe, #e0e7ff);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .word-problem p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .balls-visual {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .ball {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+            box-shadow: inset -3px -3px 6px rgba(0, 0, 0, 0.2),
+                        inset 3px 3px 6px rgba(255, 255, 255, 0.3),
+                        0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            min-width: 120px;
+        }
+
+        .input-group input {
+            width: 80px;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 1.1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+        }
+
+        .input-group input.correct {
+            border-color: var(--success);
+            background: #ecfdf5;
+        }
+
+        .input-group input.incorrect {
+            border-color: var(--error);
+            background: #fef2f2;
+        }
+
+        .check-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .check-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .check-btn:disabled {
+            background: var(--text-light);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .operation-question {
+            background: #fefce8;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .operation-question h4 {
+            color: var(--warning);
+            margin-bottom: 15px;
+        }
+
+        .operation-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .operation-btn {
+            padding: 15px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .operation-btn:hover:not(:disabled) {
+            border-color: var(--warning);
+            background: #fffbeb;
+        }
+
+        .operation-btn.selected-correct {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .operation-btn.selected-incorrect {
+            background: var(--error);
+            border-color: var(--error);
+            color: white;
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 1000;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Completion Message */
+        .completion-message {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 20px;
+            color: white;
+            margin-top: 30px;
+        }
+
+        .completion-message.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .completion-message h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .completion-message p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            .ratio-display {
+                flex-direction: column;
+            }
+
+            .operation-options {
+                grid-template-columns: 1fr;
+            }
+
+            .input-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>יחס - חרוזים וכדורים</h1>
+            <p>עמוד 7 - תרגילי יחס</p>
+            <div class="score-bar">
+                <div class="score-item">
+                    <div class="score-number" id="correct-count">0</div>
+                    <div class="score-label">תשובות נכונות</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-number" id="total-count">0</div>
+                    <div class="score-label">מתוך 7</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Problem Setup -->
+        <div class="problem-setup">
+            <h2>נתון:</h2>
+            <p style="font-size: 1.15rem; line-height: 1.8;">
+                היחס בין מספר החרוזים <strong style="color: #ec4899;">הורודים</strong>
+                למספר החרוזים <strong style="color: #8b5cf6;">הסגולים</strong> במחרזת הוא <strong>3:1</strong>.
+            </p>
+            <div class="ratio-display">
+                <div class="bead-group">
+                    <div class="bead pink"></div>
+                    <div class="bead pink"></div>
+                    <div class="bead pink"></div>
+                    <span class="ratio-label">ורודים</span>
+                </div>
+                <div class="ratio-text">3 : 1</div>
+                <div class="bead-group">
+                    <div class="bead purple"></div>
+                    <span class="ratio-label">סגולים</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 1: True/False Statements -->
+        <div class="section">
+            <h3>
+                <div class="section-icon">1</div>
+                כתבו ליד כל היגד נכון/לא נכון
+            </h3>
+
+            <!-- Statement א -->
+            <div class="statement-card" id="statement-a">
+                <div class="statement-header">
+                    <div class="statement-letter">א</div>
+                    <div class="statement-text">
+                        ניתן לסדר את החרוזים בקבוצות של 4 חרוזים, כך שבכל קבוצה יש חרוז אחד ורוד.
+                    </div>
+                </div>
+                <div class="answer-buttons">
+                    <button class="answer-btn" onclick="checkStatement('a', true)">נכון</button>
+                    <button class="answer-btn" onclick="checkStatement('a', false)">לא נכון</button>
+                </div>
+                <div class="feedback" id="feedback-a"></div>
+                <button class="hint-btn" onclick="showHint('a')">רמז</button>
+                <div class="hint-text" id="hint-a">
+                    אם היחס הוא 3:1, כמה חרוזים מכל סוג יהיו בקבוצה של 4?
+                    חשבו: 3 ורודים + 1 סגול = 4 חרוזים.
+                </div>
+            </div>
+
+            <!-- Statement ב -->
+            <div class="statement-card" id="statement-b">
+                <div class="statement-header">
+                    <div class="statement-letter">ב</div>
+                    <div class="statement-text">
+                        ⅓ מהחרוזים הם ורודים
+                    </div>
+                </div>
+                <div class="answer-buttons">
+                    <button class="answer-btn" onclick="checkStatement('b', true)">נכון</button>
+                    <button class="answer-btn" onclick="checkStatement('b', false)">לא נכון</button>
+                </div>
+                <div class="feedback" id="feedback-b"></div>
+                <button class="hint-btn" onclick="showHint('b')">רמז</button>
+                <div class="hint-text" id="hint-b">
+                    סך הכל יש 3+1=4 חלקים. כמה מתוכם ורודים?
+                    החרוזים הורודים הם 3 מתוך 4, כלומר ¾.
+                </div>
+            </div>
+
+            <!-- Statement ג -->
+            <div class="statement-card" id="statement-c">
+                <div class="statement-header">
+                    <div class="statement-letter">ג</div>
+                    <div class="statement-text">
+                        היחס בין מספר החרוזים הורודים לסך כל החרוזים במחרזת הוא 4:1
+                    </div>
+                </div>
+                <div class="answer-buttons">
+                    <button class="answer-btn" onclick="checkStatement('c', true)">נכון</button>
+                    <button class="answer-btn" onclick="checkStatement('c', false)">לא נכון</button>
+                </div>
+                <div class="feedback" id="feedback-c"></div>
+                <button class="hint-btn" onclick="showHint('c')">רמז</button>
+                <div class="hint-text" id="hint-c">
+                    ורודים: 3 חלקים. סך הכל: 3+1=4 חלקים.
+                    היחס של ורודים לסך הכל הוא 3:4, לא 4:1.
+                </div>
+            </div>
+
+            <!-- Statement ד -->
+            <div class="statement-card" id="statement-d">
+                <div class="statement-header">
+                    <div class="statement-letter">ד</div>
+                    <div class="statement-text">
+                        ¾ מהחרוזים הם סגולים
+                    </div>
+                </div>
+                <div class="answer-buttons">
+                    <button class="answer-btn" onclick="checkStatement('d', true)">נכון</button>
+                    <button class="answer-btn" onclick="checkStatement('d', false)">לא נכון</button>
+                </div>
+                <div class="feedback" id="feedback-d"></div>
+                <button class="hint-btn" onclick="showHint('d')">רמז</button>
+                <div class="hint-text" id="hint-d">
+                    הסגולים הם 1 חלק מתוך 4 = ¼.
+                    הורודים הם 3 חלקים מתוך 4 = ¾.
+                    שימו לב להבדל!
+                </div>
+            </div>
+
+            <!-- Statement ה -->
+            <div class="statement-card" id="statement-e">
+                <div class="statement-header">
+                    <div class="statement-letter">ה</div>
+                    <div class="statement-text">
+                        מספר החרוזים הסגולים גדול פי 3 ממספר החרוזים הורודים
+                    </div>
+                </div>
+                <div class="answer-buttons">
+                    <button class="answer-btn" onclick="checkStatement('e', true)">נכון</button>
+                    <button class="answer-btn" onclick="checkStatement('e', false)">לא נכון</button>
+                </div>
+                <div class="feedback" id="feedback-e"></div>
+                <button class="hint-btn" onclick="showHint('e')">רמז</button>
+                <div class="hint-text" id="hint-e">
+                    ורודים: 3 חלקים. סגולים: 1 חלק.
+                    הורודים גדולים פי 3 מהסגולים, לא להפך!
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Word Problem - Balls -->
+        <div class="section">
+            <h3>
+                <div class="section-icon">2</div>
+                בעיה מילולית - כדורים
+            </h3>
+
+            <div class="word-problem">
+                <p>
+                    בשיעור חנ"ג חולקו <strong>10 כדורים</strong> לשתי קבוצות תלמידים,
+                    קבוצה א' וקבוצה ב' ביחס של <strong>3:2</strong>.
+                </p>
+                <div class="balls-visual">
+                    <div class="ball">1</div>
+                    <div class="ball">2</div>
+                    <div class="ball">3</div>
+                    <div class="ball">4</div>
+                    <div class="ball">5</div>
+                    <div class="ball">6</div>
+                    <div class="ball">7</div>
+                    <div class="ball">8</div>
+                    <div class="ball">9</div>
+                    <div class="ball">10</div>
+                </div>
+                <p><strong>כמה כדורים תקבל כל קבוצה?</strong></p>
+            </div>
+
+            <div class="input-group">
+                <label>קבוצה א' תקבל:</label>
+                <input type="number" id="group-a" min="0" max="10" placeholder="?">
+                <span>כדורים</span>
+            </div>
+
+            <div class="input-group">
+                <label>קבוצה ב' תקבל:</label>
+                <input type="number" id="group-b" min="0" max="10" placeholder="?">
+                <span>כדורים</span>
+            </div>
+
+            <button class="check-btn" id="check-balls-btn" onclick="checkBalls()">בדוק תשובות</button>
+
+            <div class="feedback" id="feedback-balls"></div>
+
+            <button class="hint-btn" onclick="showHint('balls')" style="margin-top: 15px;">רמז</button>
+            <div class="hint-text" id="hint-balls">
+                יחס 3:2 אומר שסך הכל יש 3+2=5 חלקים.
+                לחלק 10 כדורים ל-5 חלקים: 10÷5=2 כדורים לכל חלק.
+                קבוצה א' מקבלת 3 חלקים = 3×2 = ?
+                קבוצה ב' מקבלת 2 חלקים = 2×2 = ?
+            </div>
+
+            <div class="operation-question" id="operation-section" style="display: none;">
+                <h4>איזו פעולה כדאי לבצע ליחס 3:2 כדי לקבל את התשובה באופן מידי?</h4>
+                <div class="operation-options">
+                    <button class="operation-btn" onclick="checkOperation('add')">לחבר 2</button>
+                    <button class="operation-btn" onclick="checkOperation('multiply')">לכפול ב-2</button>
+                    <button class="operation-btn" onclick="checkOperation('subtract')">לחסר 2</button>
+                    <button class="operation-btn" onclick="checkOperation('divide')">לחלק ב-2</button>
+                </div>
+                <div class="feedback" id="feedback-operation"></div>
+            </div>
+        </div>
+
+        <!-- Completion Message -->
+        <div class="completion-message" id="completion-message">
+            <h2>כל הכבוד!</h2>
+            <p>סיימת את כל התרגילים בהצלחה!</p>
+            <p style="margin-top: 15px; font-size: 1rem;">הבנת יחסים היא מיומנות חשובה במתמטיקה</p>
+        </div>
+    </div>
+
+    <script>
+        // Answers
+        const correctAnswers = {
+            a: false, // FALSE - בקבוצה של 4 יש 3 ורודים, לא 1
+            b: false, // FALSE - ¾ ורודים, לא ⅓
+            c: false, // FALSE - 3:4 ולא 4:1
+            d: false, // FALSE - ¼ סגולים, לא ¾
+            e: false  // FALSE - הורודים גדולים פי 3, לא הסגולים
+        };
+
+        const explanations = {
+            a: {
+                correct: 'נכון! בקבוצה של 4 חרוזים (יחס 3:1) יש 3 ורודים ו-1 סגול, לא חרוז ורוד אחד.',
+                incorrect: 'לא נכון. בקבוצה של 4 חרוזים (יחס 3:1) יש 3 ורודים ו-1 סגול - לא חרוז ורוד אחד!'
+            },
+            b: {
+                correct: 'נכון! החרוזים הורודים הם 3 מתוך 4, כלומר ¾ ולא ⅓.',
+                incorrect: 'לא נכון. החרוזים הורודים הם 3 מתוך 4 חלקים = ¾, לא ⅓.'
+            },
+            c: {
+                correct: 'נכון! היחס של ורודים לסך הכל הוא 3:4 ולא 4:1.',
+                incorrect: 'לא נכון. ורודים: 3, סך הכל: 4. היחס הוא 3:4, לא 4:1.'
+            },
+            d: {
+                correct: 'נכון! הסגולים הם ¼ מהחרוזים (1 מתוך 4), לא ¾.',
+                incorrect: 'לא נכון. הסגולים הם 1 מתוך 4 = ¼. הורודים הם ¾.'
+            },
+            e: {
+                correct: 'נכון! הורודים (3) גדולים פי 3 מהסגולים (1), לא להפך.',
+                incorrect: 'לא נכון. מספר הורודים (3) גדול פי 3 ממספר הסגולים (1), לא להפך!'
+            }
+        };
+
+        let answered = {a: false, b: false, c: false, d: false, e: false, balls: false, operation: false};
+        let correctCount = 0;
+
+        function checkStatement(letter, userAnswer) {
+            if (answered[letter]) return;
+            answered[letter] = true;
+
+            const isCorrect = userAnswer === correctAnswers[letter];
+            const card = document.getElementById(`statement-${letter}`);
+            const feedback = document.getElementById(`feedback-${letter}`);
+            const buttons = card.querySelectorAll('.answer-btn');
+
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                if (btn.textContent === 'נכון' && userAnswer === true) {
+                    btn.classList.add(isCorrect ? 'selected-correct' : 'selected-incorrect');
+                } else if (btn.textContent === 'לא נכון' && userAnswer === false) {
+                    btn.classList.add(isCorrect ? 'selected-correct' : 'selected-incorrect');
+                }
+            });
+
+            card.classList.add(isCorrect ? 'correct' : 'incorrect');
+
+            feedback.textContent = isCorrect ? explanations[letter].correct : explanations[letter].incorrect;
+            feedback.classList.add('show', isCorrect ? 'correct' : 'incorrect');
+
+            if (isCorrect) {
+                correctCount++;
+                updateScore();
+            }
+
+            checkCompletion();
+        }
+
+        function checkBalls() {
+            if (answered.balls) return;
+
+            const groupA = parseInt(document.getElementById('group-a').value);
+            const groupB = parseInt(document.getElementById('group-b').value);
+            const feedback = document.getElementById('feedback-balls');
+            const inputA = document.getElementById('group-a');
+            const inputB = document.getElementById('group-b');
+
+            if (isNaN(groupA) || isNaN(groupB)) {
+                feedback.textContent = 'נא להזין מספרים בשני השדות';
+                feedback.classList.add('show', 'incorrect');
+                feedback.classList.remove('correct');
+                return;
+            }
+
+            const correctA = groupA === 6;
+            const correctB = groupB === 4;
+
+            inputA.classList.add(correctA ? 'correct' : 'incorrect');
+            inputB.classList.add(correctB ? 'correct' : 'incorrect');
+            inputA.disabled = true;
+            inputB.disabled = true;
+
+            if (correctA && correctB) {
+                answered.balls = true;
+                correctCount++;
+                updateScore();
+                feedback.textContent = 'מצוין! קבוצה א\' מקבלת 6 כדורים וקבוצה ב\' מקבלת 4 כדורים.';
+                feedback.classList.add('show', 'correct');
+                feedback.classList.remove('incorrect');
+
+                // Show operation question
+                document.getElementById('operation-section').style.display = 'block';
+                document.getElementById('check-balls-btn').disabled = true;
+            } else {
+                let msg = '';
+                if (!correctA) msg += 'קבוצה א\' צריכה לקבל 6 כדורים (3×2). ';
+                if (!correctB) msg += 'קבוצה ב\' צריכה לקבל 4 כדורים (2×2).';
+                feedback.textContent = msg;
+                feedback.classList.add('show', 'incorrect');
+                feedback.classList.remove('correct');
+
+                // Allow retry
+                setTimeout(() => {
+                    inputA.disabled = false;
+                    inputB.disabled = false;
+                    inputA.classList.remove('correct', 'incorrect');
+                    inputB.classList.remove('correct', 'incorrect');
+                }, 2000);
+            }
+
+            checkCompletion();
+        }
+
+        function checkOperation(operation) {
+            if (answered.operation) return;
+            answered.operation = true;
+
+            const isCorrect = operation === 'multiply';
+            const feedback = document.getElementById('feedback-operation');
+            const buttons = document.querySelectorAll('.operation-btn');
+
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                if (btn.textContent.includes('לכפול') && operation === 'multiply') {
+                    btn.classList.add(isCorrect ? 'selected-correct' : 'selected-incorrect');
+                } else if (btn.onclick.toString().includes(operation)) {
+                    btn.classList.add('selected-incorrect');
+                }
+            });
+
+            // Highlight correct answer
+            buttons.forEach(btn => {
+                if (btn.textContent.includes('לכפול')) {
+                    btn.classList.add('selected-correct');
+                }
+            });
+
+            if (isCorrect) {
+                correctCount++;
+                updateScore();
+                feedback.textContent = 'נכון מאוד! כופלים את היחס 3:2 ב-2 ומקבלים 6:4, שזה בדיוק מספר הכדורים לכל קבוצה!';
+                feedback.classList.add('show', 'correct');
+            } else {
+                feedback.textContent = 'התשובה הנכונה היא לכפול ב-2. כי 10÷5=2, וכש כופלים 3:2 ב-2 מקבלים 6:4.';
+                feedback.classList.add('show', 'incorrect');
+            }
+
+            checkCompletion();
+        }
+
+        function showHint(id) {
+            const hint = document.getElementById(`hint-${id}`);
+            hint.classList.toggle('show');
+        }
+
+        function updateScore() {
+            document.getElementById('correct-count').textContent = correctCount;
+            document.getElementById('total-count').textContent =
+                Object.values(answered).filter(v => v).length;
+        }
+
+        function checkCompletion() {
+            const allAnswered = answered.a && answered.b && answered.c &&
+                               answered.d && answered.e && answered.balls && answered.operation;
+
+            if (allAnswered && correctCount >= 5) {
+                document.getElementById('completion-message').classList.add('show');
+                createConfetti();
+            }
+        }
+
+        function createConfetti() {
+            const colors = ['#7c3aed', '#ec4899', '#10b981', '#f59e0b', '#3b82f6'];
+
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                    confetti.style.width = (Math.random() * 10 + 5) + 'px';
+                    confetti.style.height = confetti.style.width;
+                    confetti.style.animation = `confetti-fall ${Math.random() * 2 + 2}s linear forwards`;
+
+                    document.body.appendChild(confetti);
+
+                    setTimeout(() => confetti.remove(), 4000);
+                }, i * 50);
+            }
+        }
+    </script>
+</body>
+</html>

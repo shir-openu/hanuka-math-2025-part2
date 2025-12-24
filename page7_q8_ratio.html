@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>יחס חרוזים - ורוד לסגול</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --ink: #1a1a1a;
+    --panel: #f8f9fa;
+    --border: #dee2e6;
+    --purple: #7c3aed;
+    --green: #22c55e;
+    --orange: #f59e0b;
+    --teal: #14b8a6;
+    --cyan: #06b6d4;
+    --yellow: #eab308;
+    --red: #ef4444;
+    --pink: #ec4899;
+    --deep-purple: #8b5cf6;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+    font-size: 20px;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .title {
+    text-align: center;
+    font-size: 32px;
+    color: var(--ink);
+    margin-bottom: 10px;
+    text-decoration: underline;
+  }
+
+  .subtitle {
+    text-align: center;
+    font-size: 22px;
+    color: var(--purple);
+    margin-bottom: 25px;
+  }
+
+  .exercise {
+    background: var(--panel);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 25px;
+  }
+
+  .section-title {
+    font-size: 24px;
+    color: var(--purple);
+    margin-bottom: 15px;
+    font-weight: bold;
+  }
+
+  .beads-container {
+    display: flex;
+    justify-content: center;
+    margin: 25px 0;
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    border: 1px solid var(--border);
+  }
+
+  .beads-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .bead {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+    color: white;
+    box-shadow: inset -3px -3px 8px rgba(0,0,0,0.2),
+                inset 3px 3px 8px rgba(255,255,255,0.3),
+                2px 2px 5px rgba(0,0,0,0.1);
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .bead.pink {
+    background: linear-gradient(135deg, #f472b6, #ec4899);
+  }
+
+  .bead.purple {
+    background: linear-gradient(135deg, #a78bfa, #7c3aed);
+  }
+
+  .bead:nth-child(1) { animation-delay: 0s; }
+  .bead:nth-child(2) { animation-delay: 0.3s; }
+  .bead:nth-child(3) { animation-delay: 0.6s; }
+  .bead:nth-child(4) { animation-delay: 0.9s; }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+
+  .ratio-display {
+    text-align: center;
+    font-size: 28px;
+    color: var(--purple);
+    margin: 20px 0;
+    font-weight: bold;
+  }
+
+  .ratio-box {
+    display: inline-block;
+    background: rgba(124, 58, 237, 0.1);
+    border: 2px solid var(--purple);
+    border-radius: 12px;
+    padding: 12px 30px;
+  }
+
+  .given-box {
+    background: rgba(124, 58, 237, 0.1);
+    border: 2px solid var(--purple);
+    border-radius: 10px;
+    padding: 15px 20px;
+    margin: 15px 0;
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .statements-container {
+    margin-top: 20px;
+  }
+
+  .statement-item {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin: 12px 0;
+    transition: all 0.3s;
+  }
+
+  .statement-item.correct {
+    border-color: var(--green);
+    background: rgba(34, 197, 94, 0.08);
+  }
+
+  .statement-item.hint-active {
+    border-color: var(--orange);
+  }
+
+  .statement-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 12px;
+  }
+
+  .statement-letter {
+    background: var(--purple);
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .statement-text {
+    font-size: 20px;
+    color: var(--ink);
+    flex-grow: 1;
+  }
+
+  .buttons-row {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 12px;
+  }
+
+  .tf-btn {
+    padding: 12px 30px;
+    font-size: 20px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    background: white;
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: bold;
+    min-width: 120px;
+  }
+
+  .tf-btn:hover:not(:disabled) {
+    transform: scale(1.05);
+  }
+
+  .tf-btn.true-btn:hover:not(:disabled) {
+    border-color: var(--green);
+    background: rgba(34, 197, 94, 0.1);
+    color: #166534;
+  }
+
+  .tf-btn.false-btn:hover:not(:disabled) {
+    border-color: var(--red);
+    background: rgba(239, 68, 68, 0.1);
+    color: #991b1b;
+  }
+
+  .tf-btn.correct {
+    border-color: var(--green);
+    background: rgba(34, 197, 94, 0.25);
+    color: #166534;
+  }
+
+  .tf-btn.wrong {
+    border-color: var(--red);
+    background: rgba(239, 68, 68, 0.2);
+    animation: shake 0.4s;
+  }
+
+  .tf-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+
+  .hint-box {
+    margin-top: 12px;
+    padding: 14px 18px;
+    background: rgba(245, 158, 11, 0.15);
+    border: 2px solid var(--orange);
+    border-radius: 10px;
+    font-size: 18px;
+    color: #92400e;
+    display: none;
+  }
+
+  .hint-box.show {
+    display: block;
+    animation: fadeIn 0.4s;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .success-msg {
+    color: var(--green);
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
+    display: none;
+    text-align: center;
+  }
+
+  .success-msg.show {
+    display: block;
+    animation: pop 0.4s;
+  }
+
+  @keyframes pop {
+    0% { transform: scale(0.8); opacity: 0; }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .progress-bar {
+    background: var(--border);
+    height: 10px;
+    border-radius: 5px;
+    margin: 20px 0;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--pink), var(--purple));
+    border-radius: 5px;
+    transition: width 0.4s;
+    width: 0%;
+  }
+
+  .progress-text {
+    text-align: center;
+    color: #666;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+
+  /* Extra question section */
+  .extra-section {
+    background: rgba(20, 184, 166, 0.08);
+    border: 2px solid var(--teal);
+    border-radius: 16px;
+    padding: 25px;
+    margin-top: 25px;
+  }
+
+  .extra-title {
+    font-size: 24px;
+    color: var(--teal);
+    margin-bottom: 15px;
+    font-weight: bold;
+  }
+
+  .balls-visual {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+  }
+
+  .ball-group {
+    text-align: center;
+  }
+
+  .ball-group-title {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 10px;
+  }
+
+  .balls-row {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .ball {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    box-shadow: inset -2px -2px 5px rgba(0,0,0,0.2),
+                inset 2px 2px 5px rgba(255,255,255,0.3);
+  }
+
+  .ball.red {
+    background: linear-gradient(135deg, #f87171, #ef4444);
+  }
+
+  .ball.blue {
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+  }
+
+  .input-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 20px 0;
+  }
+
+  .answer-input {
+    width: 70px;
+    padding: 12px;
+    font-size: 24px;
+    text-align: center;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    color: var(--ink);
+  }
+
+  .answer-input:focus {
+    outline: none;
+    border-color: var(--teal);
+  }
+
+  .answer-input.correct {
+    border-color: var(--green);
+    background: rgba(34, 197, 94, 0.15);
+  }
+
+  .answer-input.wrong {
+    border-color: var(--red);
+    animation: shake 0.3s;
+  }
+
+  .check-btn {
+    padding: 12px 28px;
+    font-size: 20px;
+    border: none;
+    border-radius: 10px;
+    background: var(--teal);
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
+  }
+
+  .check-btn:hover:not(:disabled) {
+    background: #0d9488;
+    transform: translateY(-2px);
+  }
+
+  .check-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+
+  .celebration {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  .confetti {
+    position: absolute;
+    width: 12px; height: 12px;
+    border-radius: 2px;
+    animation: fall 3s ease-out forwards;
+  }
+
+  @keyframes fall {
+    0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  .final-celebration {
+    display: none;
+    text-align: center;
+    padding: 30px;
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(124, 58, 237, 0.15));
+    border: 3px solid var(--purple);
+    border-radius: 16px;
+    margin-top: 25px;
+  }
+
+  .final-celebration.show {
+    display: block;
+    animation: pop 0.5s;
+  }
+
+  .final-celebration h2 {
+    color: var(--purple);
+    font-size: 32px;
+    margin: 0 0 15px 0;
+  }
+
+  .explanation-box {
+    background: rgba(34, 197, 94, 0.1);
+    border: 2px solid var(--green);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 16px;
+    color: #166534;
+    margin-top: 10px;
+    display: none;
+  }
+
+  .explanation-box.show {
+    display: block;
+  }
+
+  .formula {
+    direction: ltr;
+    display: inline-block;
+    font-family: 'Times New Roman', serif;
+    font-size: 20px;
+    background: rgba(124, 58, 237, 0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="title">שאלה 8 - יחסים</div>
+  <div class="subtitle">חרוזים ורודים וסגולים</div>
+
+  <div class="progress-text">התקדמות: <span id="progressCount">0</span> מתוך 6 שאלות</div>
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <div class="exercise">
+    <!-- Visual beads representation -->
+    <div class="beads-container">
+      <div class="beads-row">
+        <div class="bead pink">1</div>
+        <div class="bead pink">2</div>
+        <div class="bead pink">3</div>
+        <div class="bead purple">1</div>
+      </div>
+    </div>
+
+    <div class="ratio-display">
+      <div class="ratio-box">
+        יחס חרוזים ורודים לסגולים:
+        <span style="color: var(--pink);">3</span> : <span style="color: var(--deep-purple);">1</span>
+      </div>
+    </div>
+
+    <div class="given-box">
+      <strong>נתון:</strong>
+      <span style="color: var(--pink);">ורוד</span> : <span style="color: var(--deep-purple);">סגול</span> = 3 : 1
+      <br>
+      <span style="font-size: 16px; color: #666;">
+        (אם יש 3 ורודים, יש 1 סגול. סה"כ 4 חרוזים בקבוצה)
+      </span>
+    </div>
+
+    <div class="section-title">סמנו נכון או לא נכון:</div>
+
+    <div class="statements-container">
+
+      <!-- Statement א -->
+      <div class="statement-item" id="stmt-a">
+        <div class="statement-header">
+          <div class="statement-letter">א</div>
+          <div class="statement-text">
+            ניתן לחלק את החרוזים לקבוצות של 4 כך שבכל קבוצה חרוז ורוד אחד
+          </div>
+        </div>
+        <div class="buttons-row">
+          <button class="tf-btn true-btn" onclick="checkTF('a', true, this)">נכון</button>
+          <button class="tf-btn false-btn" onclick="checkTF('a', false, this)">לא נכון</button>
+        </div>
+        <div class="hint-box" id="hint-a"></div>
+        <div class="success-msg" id="success-a">נכון! זה היה נותן יחס 1:3, לא 3:1</div>
+        <div class="explanation-box" id="explain-a">
+          אם בכל קבוצה של 4 יש רק 1 ורוד, אז יש 3 סגולים - זה יחס 1:3, לא 3:1!
+        </div>
+      </div>
+
+      <!-- Statement ב -->
+      <div class="statement-item" id="stmt-b">
+        <div class="statement-header">
+          <div class="statement-letter">ב</div>
+          <div class="statement-text">
+            שליש מהחרוזים הם ורודים
+          </div>
+        </div>
+        <div class="buttons-row">
+          <button class="tf-btn true-btn" onclick="checkTF('b', true, this)">נכון</button>
+          <button class="tf-btn false-btn" onclick="checkTF('b', false, this)">לא נכון</button>
+        </div>
+        <div class="hint-box" id="hint-b"></div>
+        <div class="success-msg" id="success-b">נכון! הורודים הם 3/4, לא 1/3</div>
+        <div class="explanation-box" id="explain-b">
+          מתוך 4 חרוזים, 3 הם ורודים. זה <span class="formula">3/4</span>, לא <span class="formula">1/3</span>.
+        </div>
+      </div>
+
+      <!-- Statement ג -->
+      <div class="statement-item" id="stmt-c">
+        <div class="statement-header">
+          <div class="statement-letter">ג</div>
+          <div class="statement-text">
+            יחס מספר החרוזים הורודים למספר כל החרוזים הוא 1:4
+          </div>
+        </div>
+        <div class="buttons-row">
+          <button class="tf-btn true-btn" onclick="checkTF('c', true, this)">נכון</button>
+          <button class="tf-btn false-btn" onclick="checkTF('c', false, this)">לא נכון</button>
+        </div>
+        <div class="hint-box" id="hint-c"></div>
+        <div class="success-msg" id="success-c">נכון! היחס הוא 3:4, לא 1:4</div>
+        <div class="explanation-box" id="explain-c">
+          ורוד:סה"כ = 3:4 (3 ורודים מתוך 4 חרוזים), לא 1:4.
+        </div>
+      </div>
+
+      <!-- Statement ד -->
+      <div class="statement-item" id="stmt-d">
+        <div class="statement-header">
+          <div class="statement-letter">ד</div>
+          <div class="statement-text">
+            שלושה רבעים מהחרוזים הם סגולים
+          </div>
+        </div>
+        <div class="buttons-row">
+          <button class="tf-btn true-btn" onclick="checkTF('d', true, this)">נכון</button>
+          <button class="tf-btn false-btn" onclick="checkTF('d', false, this)">לא נכון</button>
+        </div>
+        <div class="hint-box" id="hint-d"></div>
+        <div class="success-msg" id="success-d">נכון! רק רבע (1/4) הם סגולים</div>
+        <div class="explanation-box" id="explain-d">
+          מתוך 4 חרוזים, רק 1 סגול = <span class="formula">1/4</span>, לא <span class="formula">3/4</span>.
+        </div>
+      </div>
+
+      <!-- Statement ה -->
+      <div class="statement-item" id="stmt-e">
+        <div class="statement-header">
+          <div class="statement-letter">ה</div>
+          <div class="statement-text">
+            מספר החרוזים הסגולים גדול פי 3 ממספר החרוזים הורודים
+          </div>
+        </div>
+        <div class="buttons-row">
+          <button class="tf-btn true-btn" onclick="checkTF('e', true, this)">נכון</button>
+          <button class="tf-btn false-btn" onclick="checkTF('e', false, this)">לא נכון</button>
+        </div>
+        <div class="hint-box" id="hint-e"></div>
+        <div class="success-msg" id="success-e">נכון! דווקא הורודים גדולים פי 3!</div>
+        <div class="explanation-box" id="explain-e">
+          יש 3 ורודים ו-1 סגול. הורודים גדולים פי 3 מהסגולים, לא להפך!
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Extra question -->
+  <div class="extra-section">
+    <div class="extra-title">שאלת בונוס: חלוקת 10 כדורים</div>
+
+    <div class="given-box" style="border-color: var(--teal); background: rgba(20, 184, 166, 0.1);">
+      יש 10 כדורים שצריך לחלק לשתי קבוצות ביחס <span class="formula">3:2</span>
+    </div>
+
+    <div class="balls-visual" id="ballsVisual">
+      <div class="ball-group">
+        <div class="ball-group-title">קבוצה A</div>
+        <div class="balls-row" id="groupA">
+          <div class="ball red"></div>
+          <div class="ball red"></div>
+          <div class="ball red"></div>
+          <div class="ball red"></div>
+          <div class="ball red"></div>
+          <div class="ball red"></div>
+        </div>
+        <div style="margin-top: 8px; font-weight: bold; color: var(--red);">? כדורים</div>
+      </div>
+      <div class="ball-group">
+        <div class="ball-group-title">קבוצה B</div>
+        <div class="balls-row" id="groupB">
+          <div class="ball blue"></div>
+          <div class="ball blue"></div>
+          <div class="ball blue"></div>
+          <div class="ball blue"></div>
+        </div>
+        <div style="margin-top: 8px; font-weight: bold; color: var(--blue);">? כדורים</div>
+      </div>
+    </div>
+
+    <div class="statement-item" id="stmt-extra" style="background: rgba(20, 184, 166, 0.05);">
+      <div class="statement-text" style="text-align: center; margin-bottom: 15px;">
+        כמה כדורים בכל קבוצה?
+      </div>
+      <div class="input-row">
+        <span>קבוצה A:</span>
+        <input type="text" class="answer-input" id="extraA" placeholder="?" maxlength="2">
+        <span style="margin: 0 15px;">קבוצה B:</span>
+        <input type="text" class="answer-input" id="extraB" placeholder="?" maxlength="2">
+        <button class="check-btn" onclick="checkExtra()">בדוק</button>
+      </div>
+      <div class="hint-box" id="hint-extra"></div>
+      <div class="success-msg" id="success-extra">מעולה! 3×2=6 ו-2×2=4</div>
+      <div class="explanation-box" id="explain-extra">
+        סה"כ חלקים: 3+2=5. כל חלק = 10÷5=2 כדורים.<br>
+        קבוצה A: 3×2=6, קבוצה B: 2×2=4
+      </div>
+    </div>
+  </div>
+
+  <div class="final-celebration" id="finalCelebration">
+    <h2>כל הכבוד! סיימת את כל השאלות!</h2>
+    <div style="font-size: 20px; color: #166534;">
+      הבנת את ההבדל בין יחס חלק-לחלק ויחס חלק-לכלל!
+    </div>
+  </div>
+
+</div>
+
+<div class="celebration" id="celebration"></div>
+
+<script>
+// All statements are FALSE (לא נכון)
+const correctAnswers = {
+  'a': false,  // Groups of 4 with 1 pink = ratio 1:3, not 3:1
+  'b': false,  // 1/3 pink? No, 3/4 are pink
+  'c': false,  // pink:total = 1:4? No, it's 3:4
+  'd': false,  // 3/4 purple? No, 1/4 are purple
+  'e': false   // purple is 3x pink? No, pink is 3x purple
+};
+
+// Progressive hints
+const hints = {
+  'a': [
+    'רמז: אם בכל קבוצה של 4 יש רק 1 ורוד, כמה סגולים יש בכל קבוצה?',
+    'רמז: 4 - 1 = 3 סגולים בכל קבוצה. מה היחס ורוד:סגול?',
+    'רמז: היחס יהיה 1:3, לא 3:1!'
+  ],
+  'b': [
+    'רמז: יש 3 ורודים מתוך כמה סה"כ?',
+    'רמז: 3 ורודים + 1 סגול = 4 חרוזים. מה השבר?',
+    'רמז: 3/4 זה לא אותו דבר כמו 1/3'
+  ],
+  'c': [
+    'רמז: כמה ורודים יש? כמה סה"כ?',
+    'רמז: ורוד:סה"כ = 3:4',
+    'רמז: 3:4 ≠ 1:4'
+  ],
+  'd': [
+    'רמז: כמה סגולים יש מתוך 4?',
+    'רמז: יש רק 1 סגול מתוך 4',
+    'רמז: 1/4 זה לא 3/4!'
+  ],
+  'e': [
+    'רמז: יש 3 ורודים ו-1 סגול. מי גדול ממי?',
+    'רמז: 3 > 1, אז הורודים גדולים יותר',
+    'רמז: הורודים גדולים פי 3 מהסגולים, לא להפך!'
+  ],
+  'extra': [
+    'רמז: היחס 3:2 אומר סה"כ 5 חלקים',
+    'רמז: 10 ÷ 5 = 2 כדורים לכל חלק',
+    'רמז: קבוצה A: 3×2=?, קבוצה B: 2×2=?'
+  ]
+};
+
+let attempts = {};
+let completed = new Set();
+const totalQuestions = 6;
+
+function checkTF(id, value, btn) {
+  if (completed.has(id)) return;
+
+  if (!attempts[id]) attempts[id] = 0;
+  attempts[id]++;
+
+  const item = document.getElementById('stmt-' + id);
+  const hintBox = document.getElementById('hint-' + id);
+  const successMsg = document.getElementById('success-' + id);
+  const explainBox = document.getElementById('explain-' + id);
+  const btns = item.querySelectorAll('.tf-btn');
+
+  if (value === correctAnswers[id]) {
+    // Correct
+    btn.classList.add('correct');
+    btns.forEach(b => b.disabled = true);
+    item.classList.add('correct');
+    item.classList.remove('hint-active');
+    hintBox.classList.remove('show');
+    successMsg.classList.add('show');
+    explainBox.classList.add('show');
+
+    completed.add(id);
+    updateProgress();
+    createConfetti();
+  } else {
+    // Wrong
+    btn.classList.add('wrong');
+    item.classList.add('hint-active');
+    setTimeout(() => btn.classList.remove('wrong'), 400);
+
+    const hintIndex = Math.min(attempts[id] - 1, hints[id].length - 1);
+    hintBox.innerHTML = '💡 ' + hints[id][hintIndex];
+    hintBox.classList.add('show');
+  }
+}
+
+function checkExtra() {
+  if (completed.has('extra')) return;
+
+  if (!attempts['extra']) attempts['extra'] = 0;
+  attempts['extra']++;
+
+  const inputA = document.getElementById('extraA');
+  const inputB = document.getElementById('extraB');
+  const item = document.getElementById('stmt-extra');
+  const hintBox = document.getElementById('hint-extra');
+  const successMsg = document.getElementById('success-extra');
+  const explainBox = document.getElementById('explain-extra');
+
+  const valA = parseInt(inputA.value.trim());
+  const valB = parseInt(inputB.value.trim());
+
+  if (valA === 6 && valB === 4) {
+    // Correct
+    inputA.classList.add('correct');
+    inputB.classList.add('correct');
+    inputA.disabled = true;
+    inputB.disabled = true;
+    item.classList.add('correct');
+    item.classList.remove('hint-active');
+    hintBox.classList.remove('show');
+    successMsg.classList.add('show');
+    explainBox.classList.add('show');
+    item.querySelector('.check-btn').disabled = true;
+
+    completed.add('extra');
+    updateProgress();
+    createConfetti();
+  } else {
+    // Wrong
+    if (valA !== 6) {
+      inputA.classList.add('wrong');
+      setTimeout(() => inputA.classList.remove('wrong'), 300);
+    }
+    if (valB !== 4) {
+      inputB.classList.add('wrong');
+      setTimeout(() => inputB.classList.remove('wrong'), 300);
+    }
+    item.classList.add('hint-active');
+
+    const hintIndex = Math.min(attempts['extra'] - 1, hints['extra'].length - 1);
+    hintBox.innerHTML = '💡 ' + hints['extra'][hintIndex];
+    hintBox.classList.add('show');
+  }
+}
+
+function updateProgress() {
+  const count = completed.size;
+  document.getElementById('progressCount').textContent = count;
+  document.getElementById('progressFill').style.width = (count / totalQuestions * 100) + '%';
+
+  if (count === totalQuestions) {
+    setTimeout(() => {
+      document.getElementById('finalCelebration').classList.add('show');
+      bigConfetti();
+    }, 500);
+  }
+}
+
+function createConfetti() {
+  const c = document.getElementById('celebration');
+  const colors = ['#f472b6', '#a78bfa', '#7c3aed', '#ec4899', '#22d3ee', '#4ade80'];
+  for (let i = 0; i < 30; i++) {
+    const d = document.createElement('div');
+    d.className = 'confetti';
+    d.style.left = Math.random() * 100 + '%';
+    d.style.background = colors[Math.floor(Math.random() * colors.length)];
+    d.style.animationDelay = Math.random() * 0.4 + 's';
+    c.appendChild(d);
+  }
+  setTimeout(() => { c.innerHTML = ''; }, 3000);
+}
+
+function bigConfetti() {
+  const c = document.getElementById('celebration');
+  const colors = ['#f472b6', '#a78bfa', '#7c3aed', '#ec4899', '#22d3ee', '#4ade80', '#fde047'];
+  for (let i = 0; i < 80; i++) {
+    const d = document.createElement('div');
+    d.className = 'confetti';
+    d.style.left = Math.random() * 100 + '%';
+    d.style.background = colors[Math.floor(Math.random() * colors.length)];
+    d.style.animationDelay = Math.random() * 1 + 's';
+    d.style.width = (8 + Math.random() * 8) + 'px';
+    d.style.height = (8 + Math.random() * 8) + 'px';
+    c.appendChild(d);
+  }
+  setTimeout(() => { c.innerHTML = ''; }, 4000);
+}
+
+// Enter key support
+document.querySelectorAll('.answer-input').forEach(input => {
+  input.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      const btn = document.querySelector('#stmt-extra .check-btn');
+      if (btn && !btn.disabled) btn.click();
+    }
+  });
+});
+</script>
+
+</body>
+</html>

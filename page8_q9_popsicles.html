@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>שאלה 9 - יחסים: ארטיקים</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --ink: #1a1a1a;
+    --panel: #f8f9fa;
+    --border: #dee2e6;
+    --purple: #7c3aed;
+    --purple-light: rgba(124, 58, 237, 0.1);
+    --green: #22c55e;
+    --green-popsicle: #4ade80;
+    --blue: #3b82f6;
+    --blue-popsicle: #60a5fa;
+    --orange: #f59e0b;
+    --teal: #14b8a6;
+    --cyan: #06b6d4;
+    --red: #ef4444;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+    font-size: 20px;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 950px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .title {
+    text-align: center;
+    font-size: 28px;
+    color: var(--purple);
+    margin-bottom: 20px;
+  }
+
+  .exercise {
+    background: var(--panel);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 25px;
+  }
+
+  .problem-text {
+    background: white;
+    border: 2px solid var(--purple);
+    border-radius: 12px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    font-size: 18px;
+    line-height: 1.6;
+  }
+
+  .problem-text strong {
+    color: var(--purple);
+  }
+
+  .popsicles-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+  }
+
+  .popsicle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .popsicle-body {
+    width: 50px;
+    height: 90px;
+    border-radius: 25px 25px 8px 8px;
+    position: relative;
+    box-shadow: inset -5px 0 15px rgba(0,0,0,0.1);
+  }
+
+  .popsicle-body.green {
+    background: linear-gradient(135deg, #4ade80, #22c55e);
+    border: 2px solid #16a34a;
+  }
+
+  .popsicle-body.blue {
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+    border: 2px solid #2563eb;
+  }
+
+  .popsicle-body::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 8px;
+    height: 25px;
+    background: rgba(255,255,255,0.4);
+    border-radius: 4px;
+  }
+
+  .popsicle-stick {
+    width: 12px;
+    height: 40px;
+    background: linear-gradient(90deg, #d4a574, #c9956c, #d4a574);
+    border-radius: 0 0 4px 4px;
+    margin-top: -2px;
+  }
+
+  .popsicle-label {
+    font-size: 14px;
+    color: #666;
+    margin-top: 8px;
+  }
+
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 15px 0;
+    font-size: 16px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .legend-dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+  }
+
+  .legend-dot.green {
+    background: linear-gradient(135deg, #4ade80, #22c55e);
+  }
+
+  .legend-dot.blue {
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+  }
+
+  .section-title {
+    font-size: 22px;
+    color: var(--purple);
+    font-weight: bold;
+    margin: 20px 0 15px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--purple);
+  }
+
+  .instruction {
+    font-size: 17px;
+    color: #555;
+    margin-bottom: 15px;
+  }
+
+  /* Ratio inputs grid */
+  .ratios-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+  }
+
+  .ratio-item {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.3s;
+  }
+
+  .ratio-item.correct {
+    border-color: var(--green);
+    background: rgba(34, 197, 94, 0.1);
+  }
+
+  .ratio-item.wrong {
+    border-color: var(--red);
+    animation: shake 0.3s;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+  }
+
+  .ratio-label {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--purple);
+    margin-bottom: 10px;
+  }
+
+  .ratio-question {
+    font-size: 18px;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+
+  .ratio-input-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    direction: ltr;
+    font-size: 24px;
+  }
+
+  .ratio-input {
+    width: 50px;
+    padding: 8px;
+    font-size: 22px;
+    text-align: center;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: white;
+  }
+
+  .ratio-input:focus {
+    outline: none;
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.2);
+  }
+
+  .ratio-input.correct {
+    border-color: var(--green);
+    background: rgba(34, 197, 94, 0.15);
+    color: var(--green);
+    font-weight: bold;
+  }
+
+  .ratio-input.wrong {
+    border-color: var(--red);
+  }
+
+  .ratio-input:disabled {
+    cursor: not-allowed;
+  }
+
+  .fraction-input {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    font-size: 22px;
+  }
+
+  .fraction-line {
+    width: 50px;
+    height: 3px;
+    background: var(--ink);
+  }
+
+  .check-btn {
+    padding: 8px 18px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    background: var(--cyan);
+    color: white;
+    cursor: pointer;
+    margin-top: 12px;
+    font-weight: bold;
+  }
+
+  .check-btn:hover {
+    background: var(--teal);
+  }
+
+  .check-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+
+  .hint-text {
+    font-size: 14px;
+    color: var(--orange);
+    margin-top: 8px;
+    min-height: 20px;
+    text-align: center;
+  }
+
+  .success-icon {
+    color: var(--green);
+    font-size: 24px;
+    margin-top: 8px;
+  }
+
+  /* Classification section */
+  .classification-section {
+    background: white;
+    border: 2px solid var(--purple);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 25px;
+  }
+
+  .classification-title {
+    font-size: 20px;
+    color: var(--purple);
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+
+  .classification-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .classification-box {
+    background: var(--panel);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+  }
+
+  .classification-box h4 {
+    margin: 0 0 10px 0;
+    color: var(--teal);
+    font-size: 18px;
+  }
+
+  .classification-box.part-part h4 {
+    color: var(--orange);
+  }
+
+  .classification-box.part-whole h4 {
+    color: var(--blue);
+  }
+
+  .letter-options {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .letter-btn {
+    min-width: 55px;
+    height: 45px;
+    padding: 0 8px;
+    font-size: 16px;
+    font-weight: bold;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .letter-btn:hover {
+    border-color: var(--purple);
+    background: var(--purple-light);
+  }
+
+  .letter-btn.selected {
+    background: var(--purple);
+    color: white;
+    border-color: var(--purple);
+  }
+
+  .letter-btn.correct {
+    background: var(--green);
+    color: white;
+    border-color: var(--green);
+  }
+
+  .letter-btn.wrong {
+    background: var(--red);
+    color: white;
+    border-color: var(--red);
+    animation: shake 0.3s;
+  }
+
+  .letter-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
+  .check-classification-btn {
+    display: block;
+    margin: 20px auto 0;
+    padding: 12px 30px;
+    font-size: 18px;
+  }
+
+  /* Progress */
+  .progress-bar {
+    width: 100%;
+    height: 12px;
+    background: #e0e0e0;
+    border-radius: 6px;
+    margin: 20px 0;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green), var(--teal));
+    border-radius: 6px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+
+  .progress-text {
+    text-align: center;
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 10px;
+  }
+
+  /* Completion */
+  .completion-msg {
+    text-align: center;
+    padding: 25px;
+    background: rgba(34, 197, 94, 0.15);
+    border: 2px solid var(--green);
+    border-radius: 12px;
+    margin-top: 20px;
+    display: none;
+  }
+
+  .completion-msg.show {
+    display: block;
+    animation: pop 0.5s ease;
+  }
+
+  .completion-msg h3 {
+    color: var(--green);
+    font-size: 26px;
+    margin: 0 0 10px 0;
+  }
+
+  .completion-msg p {
+    font-size: 18px;
+    margin: 0;
+  }
+
+  @keyframes pop {
+    0% { transform: scale(0.8); opacity: 0; }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  /* Confetti */
+  .celebration {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  .confetti {
+    position: absolute;
+    width: 12px; height: 12px;
+    border-radius: 2px;
+    animation: fall 3s ease-out forwards;
+  }
+
+  @keyframes fall {
+    0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  @media (max-width: 600px) {
+    .ratios-grid {
+      grid-template-columns: 1fr;
+    }
+    .classification-grid {
+      grid-template-columns: 1fr;
+    }
+    .popsicles-container {
+      gap: 10px;
+    }
+    .popsicle-body {
+      width: 40px;
+      height: 70px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="title">שאלה 9 - יחסים: ארטיקים</div>
+
+  <div class="exercise">
+    <div class="problem-text">
+      <strong>לפניכם 5 ארטיקים:</strong> 3 ארטיקים green ו-2 ארטיקים blue.
+    </div>
+
+    <!-- Popsicles visual -->
+    <div class="popsicles-container">
+      <div class="popsicle">
+        <div class="popsicle-body green"></div>
+        <div class="popsicle-stick"></div>
+      </div>
+      <div class="popsicle">
+        <div class="popsicle-body green"></div>
+        <div class="popsicle-stick"></div>
+      </div>
+      <div class="popsicle">
+        <div class="popsicle-body green"></div>
+        <div class="popsicle-stick"></div>
+      </div>
+      <div class="popsicle">
+        <div class="popsicle-body blue"></div>
+        <div class="popsicle-stick"></div>
+      </div>
+      <div class="popsicle">
+        <div class="popsicle-body blue"></div>
+        <div class="popsicle-stick"></div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-dot green"></div>
+        <span>green = 3</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot blue"></div>
+        <span>blue = 2</span>
+      </div>
+      <div class="legend-item">
+        <span>סה"כ = 5</span>
+      </div>
+    </div>
+
+    <div class="section-title">השלימו את היחסים הבאים:</div>
+
+    <div class="ratios-grid">
+      <!-- א: green:blue -->
+      <div class="ratio-item" id="item-a">
+        <div class="ratio-label">Green:Blue</div>
+        <div class="ratio-question">green : blue</div>
+        <div class="ratio-input-group">
+          <input type="text" class="ratio-input" id="a1" placeholder="?" maxlength="2">
+          <span>:</span>
+          <input type="text" class="ratio-input" id="a2" placeholder="?" maxlength="2">
+        </div>
+        <button class="check-btn" id="btn-a" onclick="checkRatio('a', 3, 2)">בדוק</button>
+        <div class="hint-text" id="hint-a"></div>
+      </div>
+
+      <!-- ב: blue:green -->
+      <div class="ratio-item" id="item-b">
+        <div class="ratio-label">Blue:Green</div>
+        <div class="ratio-question">blue : green</div>
+        <div class="ratio-input-group">
+          <input type="text" class="ratio-input" id="b1" placeholder="?" maxlength="2">
+          <span>:</span>
+          <input type="text" class="ratio-input" id="b2" placeholder="?" maxlength="2">
+        </div>
+        <button class="check-btn" id="btn-b" onclick="checkRatio('b', 2, 3)">בדוק</button>
+        <div class="hint-text" id="hint-b"></div>
+      </div>
+
+      <!-- ג: blue:total -->
+      <div class="ratio-item" id="item-c">
+        <div class="ratio-label">Blue:Total</div>
+        <div class="ratio-question">blue : סה"כ</div>
+        <div class="ratio-input-group">
+          <input type="text" class="ratio-input" id="c1" placeholder="?" maxlength="2">
+          <span>:</span>
+          <input type="text" class="ratio-input" id="c2" placeholder="?" maxlength="2">
+        </div>
+        <button class="check-btn" id="btn-c" onclick="checkRatio('c', 2, 5)">בדוק</button>
+        <div class="hint-text" id="hint-c"></div>
+      </div>
+
+      <!-- ד: green:total -->
+      <div class="ratio-item" id="item-d">
+        <div class="ratio-label">Green:Total</div>
+        <div class="ratio-question">green : סה"כ</div>
+        <div class="ratio-input-group">
+          <input type="text" class="ratio-input" id="d1" placeholder="?" maxlength="2">
+          <span>:</span>
+          <input type="text" class="ratio-input" id="d2" placeholder="?" maxlength="2">
+        </div>
+        <button class="check-btn" id="btn-d" onclick="checkRatio('d', 3, 5)">בדוק</button>
+        <div class="hint-text" id="hint-d"></div>
+      </div>
+
+      <!-- ה: fraction blue -->
+      <div class="ratio-item" id="item-e">
+        <div class="ratio-label">Fraction</div>
+        <div class="ratio-question">איזה חלק מהארטיקים blue?</div>
+        <div class="fraction-input">
+          <input type="text" class="ratio-input" id="e1" placeholder="?" maxlength="2">
+          <div class="fraction-line"></div>
+          <input type="text" class="ratio-input" id="e2" placeholder="?" maxlength="2">
+        </div>
+        <button class="check-btn" id="btn-e" onclick="checkFraction('e', 2, 5)">בדוק</button>
+        <div class="hint-text" id="hint-e"></div>
+      </div>
+    </div>
+
+    <!-- Classification section -->
+    <div class="classification-section" id="classification-section">
+      <div class="classification-title">סווגו: איזה יחס הוא חלק-לחלק ואיזה חלק-לשלם?</div>
+
+      <div class="classification-grid">
+        <div class="classification-box part-part">
+          <h4>יחס חלק-לחלק</h4>
+          <p style="font-size: 14px; color: #666; margin-bottom: 10px;">(משווים בין שני חלקים)</p>
+          <div class="letter-options" id="part-part-options">
+            <button class="letter-btn" data-letter="a" onclick="selectLetter(this, 'part-part')">Green:Blue</button>
+            <button class="letter-btn" data-letter="b" onclick="selectLetter(this, 'part-part')">Blue:Green</button>
+            <button class="letter-btn" data-letter="c" onclick="selectLetter(this, 'part-part')">Blue:Total</button>
+            <button class="letter-btn" data-letter="d" onclick="selectLetter(this, 'part-part')">Green:Total</button>
+            <button class="letter-btn" data-letter="e" onclick="selectLetter(this, 'part-part')">Fraction</button>
+          </div>
+        </div>
+
+        <div class="classification-box part-whole">
+          <h4>יחס חלק-לשלם</h4>
+          <p style="font-size: 14px; color: #666; margin-bottom: 10px;">(משווים חלק לסך הכל)</p>
+          <div class="letter-options" id="part-whole-options">
+            <button class="letter-btn" data-letter="a" onclick="selectLetter(this, 'part-whole')">Green:Blue</button>
+            <button class="letter-btn" data-letter="b" onclick="selectLetter(this, 'part-whole')">Blue:Green</button>
+            <button class="letter-btn" data-letter="c" onclick="selectLetter(this, 'part-whole')">Blue:Total</button>
+            <button class="letter-btn" data-letter="d" onclick="selectLetter(this, 'part-whole')">Green:Total</button>
+            <button class="letter-btn" data-letter="e" onclick="selectLetter(this, 'part-whole')">Fraction</button>
+          </div>
+        </div>
+      </div>
+
+      <button class="check-btn check-classification-btn" id="check-class-btn" onclick="checkClassification()">בדוק סיווג</button>
+      <div class="hint-text" id="hint-class" style="text-align: center; margin-top: 10px;"></div>
+    </div>
+
+    <div class="progress-text">התקדמות: <span id="progress-count">0</span>/6</div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+
+    <div class="completion-msg" id="completion">
+      <h3>כל הכבוד! סיימת את כל התרגיל!</h3>
+      <p>הבנת את ההבדל בין יחס חלק-לחלק ויחס חלק-לשלם!</p>
+    </div>
+  </div>
+</div>
+
+<div class="celebration" id="celebration"></div>
+
+<script>
+const hints = {
+  'a': ['ספרו: כמה green? כמה blue?', 'green = 3, blue = 2', 'היחס הוא 3:2'],
+  'b': ['זהה לשאלה א\', רק בסדר הפוך', 'blue = 2, green = 3', 'היחס הוא 2:3'],
+  'c': ['כמה blue? כמה סה"כ?', 'blue = 2, סה"כ = 5', 'היחס הוא 2:5'],
+  'd': ['כמה green? כמה סה"כ?', 'green = 3, סה"כ = 5', 'היחס הוא 3:5'],
+  'e': ['זה כמו יחס ג\', אבל כשבר', 'blue חלקי סה"כ', 'התשובה: 2/5']
+};
+
+let attempts = {};
+let completed = 0;
+const totalQuestions = 6;
+
+function checkRatio(id, correct1, correct2) {
+  const input1 = document.getElementById(id + '1');
+  const input2 = document.getElementById(id + '2');
+  const item = document.getElementById('item-' + id);
+  const btn = document.getElementById('btn-' + id);
+  const hint = document.getElementById('hint-' + id);
+
+  if (!attempts[id]) attempts[id] = 0;
+  attempts[id]++;
+
+  const val1 = parseInt(input1.value.trim());
+  const val2 = parseInt(input2.value.trim());
+
+  if (val1 === correct1 && val2 === correct2) {
+    input1.classList.add('correct');
+    input2.classList.add('correct');
+    item.classList.add('correct');
+    item.classList.remove('wrong');
+    input1.disabled = true;
+    input2.disabled = true;
+    btn.disabled = true;
+    hint.innerHTML = '<span style="color: var(--green);">✓ נכון!</span>';
+
+    completed++;
+    updateProgress();
+    createConfetti();
+    checkAllDone();
+  } else {
+    item.classList.add('wrong');
+    input1.classList.add('wrong');
+    input2.classList.add('wrong');
+    setTimeout(() => {
+      item.classList.remove('wrong');
+      input1.classList.remove('wrong');
+      input2.classList.remove('wrong');
+    }, 300);
+
+    const hintIndex = Math.min(attempts[id] - 1, hints[id].length - 1);
+    hint.textContent = '💡 ' + hints[id][hintIndex];
+
+    if (attempts[id] >= 4) {
+      hint.innerHTML = '🎯 התשובה: ' + correct1 + ':' + correct2;
+    }
+  }
+}
+
+function checkFraction(id, correct1, correct2) {
+  const input1 = document.getElementById(id + '1');
+  const input2 = document.getElementById(id + '2');
+  const item = document.getElementById('item-' + id);
+  const btn = document.getElementById('btn-' + id);
+  const hint = document.getElementById('hint-' + id);
+
+  if (!attempts[id]) attempts[id] = 0;
+  attempts[id]++;
+
+  const val1 = parseInt(input1.value.trim());
+  const val2 = parseInt(input2.value.trim());
+
+  if (val1 === correct1 && val2 === correct2) {
+    input1.classList.add('correct');
+    input2.classList.add('correct');
+    item.classList.add('correct');
+    item.classList.remove('wrong');
+    input1.disabled = true;
+    input2.disabled = true;
+    btn.disabled = true;
+    hint.innerHTML = '<span style="color: var(--green);">✓ נכון!</span>';
+
+    completed++;
+    updateProgress();
+    createConfetti();
+    checkAllDone();
+  } else {
+    item.classList.add('wrong');
+    input1.classList.add('wrong');
+    input2.classList.add('wrong');
+    setTimeout(() => {
+      item.classList.remove('wrong');
+      input1.classList.remove('wrong');
+      input2.classList.remove('wrong');
+    }, 300);
+
+    const hintIndex = Math.min(attempts[id] - 1, hints[id].length - 1);
+    hint.textContent = '💡 ' + hints[id][hintIndex];
+
+    if (attempts[id] >= 4) {
+      hint.innerHTML = '🎯 התשובה: ' + correct1 + '/' + correct2;
+    }
+  }
+}
+
+// Classification logic
+const partPartCorrect = ['a', 'b'];
+const partWholeCorrect = ['c', 'd', 'e'];
+
+function selectLetter(btn, category) {
+  if (btn.disabled) return;
+  btn.classList.toggle('selected');
+}
+
+function checkClassification() {
+  const partPartBtns = document.querySelectorAll('#part-part-options .letter-btn');
+  const partWholeBtns = document.querySelectorAll('#part-whole-options .letter-btn');
+  const hint = document.getElementById('hint-class');
+  const checkBtn = document.getElementById('check-class-btn');
+
+  let partPartSelected = [];
+  let partWholeSelected = [];
+
+  partPartBtns.forEach(btn => {
+    if (btn.classList.contains('selected')) {
+      partPartSelected.push(btn.dataset.letter);
+    }
+  });
+
+  partWholeBtns.forEach(btn => {
+    if (btn.classList.contains('selected')) {
+      partWholeSelected.push(btn.dataset.letter);
+    }
+  });
+
+  // Check if correct
+  const partPartOK = arraysEqual(partPartSelected.sort(), partPartCorrect.sort());
+  const partWholeOK = arraysEqual(partWholeSelected.sort(), partWholeCorrect.sort());
+
+  if (partPartOK && partWholeOK) {
+    // All correct
+    partPartBtns.forEach(btn => {
+      btn.disabled = true;
+      if (partPartCorrect.includes(btn.dataset.letter)) {
+        btn.classList.remove('selected');
+        btn.classList.add('correct');
+      }
+    });
+    partWholeBtns.forEach(btn => {
+      btn.disabled = true;
+      if (partWholeCorrect.includes(btn.dataset.letter)) {
+        btn.classList.remove('selected');
+        btn.classList.add('correct');
+      }
+    });
+    checkBtn.disabled = true;
+    hint.innerHTML = '<span style="color: var(--green);">✓ מעולה! סיווגת נכון!</span>';
+
+    completed++;
+    updateProgress();
+    createConfetti();
+    createConfetti();
+    checkAllDone();
+  } else {
+    // Show feedback
+    let feedback = '💡 ';
+    if (!partPartOK) {
+      feedback += 'א, ב משווים green לblue (חלק-לחלק). ';
+    }
+    if (!partWholeOK) {
+      feedback += 'ג, ד, ה משווים לסה"כ (חלק-לשלם).';
+    }
+    hint.textContent = feedback;
+
+    // Show wrong animation on incorrect selections
+    partPartBtns.forEach(btn => {
+      if (btn.classList.contains('selected') && !partPartCorrect.includes(btn.dataset.letter)) {
+        btn.classList.add('wrong');
+        setTimeout(() => btn.classList.remove('wrong'), 500);
+      }
+    });
+    partWholeBtns.forEach(btn => {
+      if (btn.classList.contains('selected') && !partWholeCorrect.includes(btn.dataset.letter)) {
+        btn.classList.add('wrong');
+        setTimeout(() => btn.classList.remove('wrong'), 500);
+      }
+    });
+  }
+}
+
+function arraysEqual(a, b) {
+  if (a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i++) {
+    if (a[i] !== b[i]) return false;
+  }
+  return true;
+}
+
+function updateProgress() {
+  document.getElementById('progress-count').textContent = completed;
+  document.getElementById('progress-fill').style.width = (completed / totalQuestions * 100) + '%';
+}
+
+function checkAllDone() {
+  if (completed === totalQuestions) {
+    setTimeout(() => {
+      document.getElementById('completion').classList.add('show');
+      createConfetti();
+      setTimeout(createConfetti, 300);
+      setTimeout(createConfetti, 600);
+    }, 500);
+  }
+}
+
+function createConfetti() {
+  const c = document.getElementById('celebration');
+  const colors = ['#fde047', '#4ade80', '#60a5fa', '#a3e635', '#22d3ee', '#f472b6', '#a78bfa', '#7c3aed'];
+  for (let i = 0; i < 35; i++) {
+    const d = document.createElement('div');
+    d.className = 'confetti';
+    d.style.left = Math.random() * 100 + '%';
+    d.style.background = colors[Math.floor(Math.random() * colors.length)];
+    d.style.animationDelay = Math.random() * 0.5 + 's';
+    c.appendChild(d);
+  }
+  setTimeout(() => { c.innerHTML = ''; }, 3500);
+}
+
+// Enter key support
+document.querySelectorAll('.ratio-input').forEach(input => {
+  input.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      const item = input.closest('.ratio-item');
+      const btn = item.querySelector('.check-btn');
+      if (!btn.disabled) btn.click();
+    }
+  });
+});
+</script>
+
+</body>
+</html>

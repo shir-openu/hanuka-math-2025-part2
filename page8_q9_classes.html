@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>שאלה 9 - יחסים בכיתות</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --ink: #1a1a1a;
+    --panel: #f8f9fa;
+    --border: #dee2e6;
+    --purple: #7c3aed;
+    --green: #22c55e;
+    --orange: #f59e0b;
+    --teal: #14b8a6;
+    --cyan: #06b6d4;
+    --yellow: #eab308;
+    --red: #ef4444;
+    --blue: #3b82f6;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+    font-size: 20px;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .title {
+    text-align: center;
+    font-size: 32px;
+    color: var(--ink);
+    margin-bottom: 10px;
+    text-decoration: underline;
+  }
+
+  .subtitle {
+    text-align: center;
+    font-size: 20px;
+    color: var(--purple);
+    margin-bottom: 25px;
+  }
+
+  .problem-statement {
+    background: rgba(124, 58, 237, 0.1);
+    border: 2px solid var(--purple);
+    border-radius: 12px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    font-size: 18px;
+    line-height: 1.6;
+  }
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  .data-table th {
+    background: var(--purple);
+    color: white;
+    padding: 15px;
+    font-size: 18px;
+  }
+
+  .data-table td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    font-size: 18px;
+  }
+
+  .data-table tr:nth-child(even) {
+    background: var(--panel);
+  }
+
+  .data-table tr:hover {
+    background: rgba(124, 58, 237, 0.05);
+  }
+
+  .ratio-cell {
+    direction: ltr;
+    unicode-bidi: isolate;
+    font-weight: bold;
+    color: var(--purple);
+    font-size: 20px;
+  }
+
+  .exercise {
+    background: var(--panel);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .exercise-title {
+    font-size: 22px;
+    color: var(--purple);
+    margin-bottom: 15px;
+    font-weight: bold;
+  }
+
+  .step-section {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .step-title {
+    font-size: 18px;
+    color: var(--teal);
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+
+  .simplify-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  .simplify-item {
+    background: var(--panel);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    transition: all 0.3s;
+  }
+
+  .simplify-item.correct {
+    border-color: var(--green);
+    background: rgba(34, 197, 94, 0.1);
+  }
+
+  .simplify-item.hint {
+    border-color: var(--orange);
+    background: rgba(245, 158, 11, 0.05);
+  }
+
+  .class-label {
+    font-weight: bold;
+    color: var(--purple);
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  .original-ratio {
+    unicode-bidi: isolate;
+    font-size: 20px;
+    margin-bottom: 10px;
+    direction: ltr;
+    display: inline-block;
+  }
+
+  .simplify-inputs {
+    unicode-bidi: isolate;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 10px;
+    direction: ltr;
+  }
+
+  .ratio-input {
+    width: 50px;
+    padding: 8px;
+    font-size: 20px;
+    text-align: center;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: white;
+  }
+
+  .ratio-input:focus {
+    outline: none;
+    border-color: var(--cyan);
+  }
+
+  .ratio-input.correct {
+    border-color: var(--green);
+    background: rgba(34, 197, 94, 0.15);
+  }
+
+  .ratio-input.wrong {
+    border-color: var(--red);
+    animation: shake 0.3s;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+  }
+
+  .ratio-colon {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .check-btn {
+    padding: 8px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    background: var(--cyan);
+    color: white;
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: bold;
+  }
+
+  .check-btn:hover:not(:disabled) {
+    background: var(--teal);
+  }
+
+  .check-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+
+  .hint-box {
+    margin-top: 10px;
+    padding: 10px;
+    background: rgba(245, 158, 11, 0.15);
+    border: 2px solid var(--orange);
+    border-radius: 8px;
+    font-size: 14px;
+    color: #92400e;
+    display: none;
+  }
+
+  .hint-box.show {
+    display: block;
+    animation: fadeIn 0.3s;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .success-icon {
+    color: var(--green);
+    font-size: 20px;
+    margin-top: 5px;
+    display: none;
+  }
+
+  .success-icon.show {
+    display: block;
+  }
+
+  .options-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 15px;
+  }
+
+  .option {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 15px 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .option:hover:not(.disabled) {
+    border-color: var(--cyan);
+    background: rgba(6, 182, 212, 0.05);
+  }
+
+  .option.selected {
+    border-color: var(--blue);
+    background: rgba(59, 130, 246, 0.1);
+  }
+
+  .option.correct {
+    border-color: var(--green);
+    background: rgba(34, 197, 94, 0.15);
+  }
+
+  .option.wrong {
+    border-color: var(--red);
+    background: rgba(239, 68, 68, 0.1);
+  }
+
+  .option.disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
+  .option-letter {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--purple);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .option.correct .option-letter {
+    background: var(--green);
+  }
+
+  .option.wrong .option-letter {
+    background: var(--red);
+  }
+
+  .feedback-box {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 16px;
+    display: none;
+    line-height: 1.5;
+  }
+
+  .feedback-box.show {
+    display: block;
+    animation: fadeIn 0.3s;
+  }
+
+  .feedback-box.correct {
+    background: rgba(34, 197, 94, 0.15);
+    border: 2px solid var(--green);
+    color: #166534;
+  }
+
+  .feedback-box.wrong {
+    background: rgba(239, 68, 68, 0.1);
+    border: 2px solid var(--red);
+    color: #991b1b;
+  }
+
+  .summary-box {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(6, 182, 212, 0.1));
+    border: 2px solid var(--purple);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+  }
+
+  .summary-title {
+    font-size: 20px;
+    color: var(--purple);
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+
+  .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .summary-table th, .summary-table td {
+    direction: ltr;
+    unicode-bidi: isolate;
+    padding: 10px;
+    border: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .summary-table th {
+    background: var(--purple);
+    color: white;
+  }
+
+  .match-highlight {
+    background: rgba(34, 197, 94, 0.2);
+    font-weight: bold;
+  }
+
+  .celebration {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  .confetti {
+    position: absolute;
+    width: 12px; height: 12px;
+    border-radius: 2px;
+    animation: fall 3s ease-out forwards;
+  }
+
+  @keyframes fall {
+    0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  .score-container {
+    background: linear-gradient(135deg, var(--purple), var(--cyan));
+    border-radius: 16px;
+    padding: 25px;
+    text-align: center;
+    color: white;
+    margin-top: 30px;
+    display: none;
+  }
+
+  .score-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  .score-value {
+    font-size: 48px;
+    font-weight: bold;
+  }
+
+  @media (max-width: 600px) {
+    .simplify-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="title">שאלה 9 - יחסים בכיתות</div>
+  <div class="subtitle">באילו שתי כיתות קיים יחס שווה בין מספר הבנים למספר הבנות?</div>
+
+  <div class="problem-statement">
+    הטבלה הבאה מתארת את מספר הבנות והבנים בארבע כיתות.
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>כיתה</th>
+        <th>בנים</th>
+        <th>בנות</th>
+        <th>יחס בנים:בנות</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1</strong></td>
+        <td>12</td>
+        <td>9</td>
+        <td class="ratio-cell">12:9</td>
+      </tr>
+      <tr>
+        <td><strong>2</strong></td>
+        <td>14</td>
+        <td>11</td>
+        <td class="ratio-cell">14:11</td>
+      </tr>
+      <tr>
+        <td><strong>3</strong></td>
+        <td>16</td>
+        <td>12</td>
+        <td class="ratio-cell">16:12</td>
+      </tr>
+      <tr>
+        <td><strong>4</strong></td>
+        <td>18</td>
+        <td>15</td>
+        <td class="ratio-cell">18:15</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- שלב 1: צמצום יחסים -->
+  <div class="exercise">
+    <div class="exercise-title">שלב 1: צמצמו את היחסים</div>
+    <div class="step-section">
+      <div class="step-title">מצאו את היחס המצומצם עבור כל כיתה:</div>
+
+      <div class="simplify-grid">
+        <!-- כיתה 1 -->
+        <div class="simplify-item" id="item-1">
+          <div class="class-label">כיתה 1</div>
+          <div class="original-ratio">12 : 9 = </div>
+          <div class="simplify-inputs">
+            <input type="text" class="ratio-input" id="input-1a" maxlength="2" placeholder="?">
+            <span class="ratio-colon">:</span>
+            <input type="text" class="ratio-input" id="input-1b" maxlength="2" placeholder="?">
+          </div>
+          <button class="check-btn" id="btn-1" onclick="checkSimplify(1, 4, 3)">בדוק</button>
+          <div class="hint-box" id="hint-1"></div>
+          <div class="success-icon" id="success-1">✓ נכון!</div>
+        </div>
+
+        <!-- כיתה 2 -->
+        <div class="simplify-item" id="item-2">
+          <div class="class-label">כיתה 2</div>
+          <div class="original-ratio">14 : 11 = </div>
+          <div class="simplify-inputs">
+            <input type="text" class="ratio-input" id="input-2a" maxlength="2" placeholder="?">
+            <span class="ratio-colon">:</span>
+            <input type="text" class="ratio-input" id="input-2b" maxlength="2" placeholder="?">
+          </div>
+          <button class="check-btn" id="btn-2" onclick="checkSimplify(2, 14, 11)">בדוק</button>
+          <div class="hint-box" id="hint-2"></div>
+          <div class="success-icon" id="success-2">✓ נכון!</div>
+        </div>
+
+        <!-- כיתה 3 -->
+        <div class="simplify-item" id="item-3">
+          <div class="class-label">כיתה 3</div>
+          <div class="original-ratio">16 : 12 = </div>
+          <div class="simplify-inputs">
+            <input type="text" class="ratio-input" id="input-3a" maxlength="2" placeholder="?">
+            <span class="ratio-colon">:</span>
+            <input type="text" class="ratio-input" id="input-3b" maxlength="2" placeholder="?">
+          </div>
+          <button class="check-btn" id="btn-3" onclick="checkSimplify(3, 4, 3)">בדוק</button>
+          <div class="hint-box" id="hint-3"></div>
+          <div class="success-icon" id="success-3">✓ נכון!</div>
+        </div>
+
+        <!-- כיתה 4 -->
+        <div class="simplify-item" id="item-4">
+          <div class="class-label">כיתה 4</div>
+          <div class="original-ratio">18 : 15 = </div>
+          <div class="simplify-inputs">
+            <input type="text" class="ratio-input" id="input-4a" maxlength="2" placeholder="?">
+            <span class="ratio-colon">:</span>
+            <input type="text" class="ratio-input" id="input-4b" maxlength="2" placeholder="?">
+          </div>
+          <button class="check-btn" id="btn-4" onclick="checkSimplify(4, 6, 5)">בדוק</button>
+          <div class="hint-box" id="hint-4"></div>
+          <div class="success-icon" id="success-4">✓ נכון!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- שלב 2: בחירת התשובה -->
+  <div class="exercise" id="final-question" style="opacity: 0.5; pointer-events: none;">
+    <div class="exercise-title">שלב 2: באילו שתי כיתות קיים יחס שווה?</div>
+    <div class="options-container" id="options-final">
+      <div class="option" onclick="selectFinalOption(0)">
+        <span class="option-letter">א</span>
+        <span class="option-text">כיתות 1 ו-2</span>
+      </div>
+      <div class="option" onclick="selectFinalOption(1)">
+        <span class="option-letter">ב</span>
+        <span class="option-text">כיתות 1 ו-3</span>
+      </div>
+      <div class="option" onclick="selectFinalOption(2)">
+        <span class="option-letter">ג</span>
+        <span class="option-text">כיתות 2 ו-3</span>
+      </div>
+      <div class="option" onclick="selectFinalOption(3)">
+        <span class="option-letter">ד</span>
+        <span class="option-text">כיתות 2 ו-4</span>
+      </div>
+    </div>
+    <button class="check-btn" id="btn-final" onclick="checkFinalAnswer()" style="margin-top: 15px;">בדוק תשובה</button>
+    <div class="feedback-box" id="feedback-final"></div>
+  </div>
+
+  <!-- סיכום -->
+  <div class="summary-box" id="summary-box" style="display: none;">
+    <div class="summary-title">סיכום היחסים המצומצמים:</div>
+    <table class="summary-table">
+      <tr>
+        <th>כיתה</th>
+        <th>יחס מקורי</th>
+        <th>יחס מצומצם</th>
+      </tr>
+      <tr class="match-highlight">
+        <td>1</td>
+        <td>12:9</td>
+        <td><strong>4:3</strong></td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>14:11</td>
+        <td>14:11 (לא ניתן לצמצם)</td>
+      </tr>
+      <tr class="match-highlight">
+        <td>3</td>
+        <td>16:12</td>
+        <td><strong>4:3</strong></td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>18:15</td>
+        <td>6:5</td>
+      </tr>
+    </table>
+    <p style="margin-top: 15px; text-align: center;">
+      <strong>כיתות 1 ו-3 הן היחידות עם יחס שווה: 4:3</strong>
+    </p>
+  </div>
+
+  <div class="score-container" id="score-container">
+    <div class="score-title">כל הכבוד! סיימת את התרגיל!</div>
+    <div class="score-value">🎉</div>
+  </div>
+</div>
+
+<div class="celebration" id="celebration"></div>
+
+<script>
+const hints = {
+  1: ['מה המספר שמחלק גם את 12 וגם את 9?', 'המחלק המשותף הגדול ביותר הוא 3', '12÷3=4, 9÷3=3'],
+  2: ['האם יש מספר שמחלק גם את 14 וגם את 11?', '11 הוא מספר ראשוני', 'היחס כבר מצומצם: 14:11'],
+  3: ['מה המספר שמחלק גם את 16 וגם את 12?', 'המחלק המשותף הגדול ביותר הוא 4', '16÷4=4, 12÷4=3'],
+  4: ['מה המספר שמחלק גם את 18 וגם את 15?', 'המחלק המשותף הגדול ביותר הוא 3', '18÷3=6, 15÷3=5']
+};
+
+let attempts = {1: 0, 2: 0, 3: 0, 4: 0};
+let completed = {1: false, 2: false, 3: false, 4: false};
+let selectedFinal = null;
+
+function checkSimplify(classNum, correctA, correctB) {
+  const inputA = document.getElementById('input-' + classNum + 'a');
+  const inputB = document.getElementById('input-' + classNum + 'b');
+  const item = document.getElementById('item-' + classNum);
+  const hintBox = document.getElementById('hint-' + classNum);
+  const successIcon = document.getElementById('success-' + classNum);
+  const btn = document.getElementById('btn-' + classNum);
+
+  const valueA = parseInt(inputA.value.trim());
+  const valueB = parseInt(inputB.value.trim());
+
+  attempts[classNum]++;
+
+  if (valueA === correctA && valueB === correctB) {
+    inputA.classList.remove('wrong');
+    inputB.classList.remove('wrong');
+    inputA.classList.add('correct');
+    inputB.classList.add('correct');
+    item.classList.add('correct');
+    item.classList.remove('hint');
+    hintBox.classList.remove('show');
+    successIcon.classList.add('show');
+    inputA.disabled = true;
+    inputB.disabled = true;
+    btn.disabled = true;
+    completed[classNum] = true;
+    createConfetti();
+    checkAllCompleted();
+  } else {
+    inputA.classList.add('wrong');
+    inputB.classList.add('wrong');
+    item.classList.add('hint');
+    setTimeout(() => {
+      inputA.classList.remove('wrong');
+      inputB.classList.remove('wrong');
+    }, 300);
+
+    const hintIndex = Math.min(attempts[classNum] - 1, hints[classNum].length - 1);
+    let hintText = '💡 רמז ' + attempts[classNum] + ': ' + hints[classNum][hintIndex];
+
+    if (attempts[classNum] >= 4) {
+      hintText += '<br>🎯 התשובה: ' + correctA + ':' + correctB;
+    }
+
+    hintBox.innerHTML = hintText;
+    hintBox.classList.add('show');
+  }
+}
+
+function checkAllCompleted() {
+  if (completed[1] && completed[2] && completed[3] && completed[4]) {
+    const finalQuestion = document.getElementById('final-question');
+    finalQuestion.style.opacity = '1';
+    finalQuestion.style.pointerEvents = 'auto';
+    finalQuestion.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function selectFinalOption(index) {
+  const options = document.querySelectorAll('#options-final .option');
+  if (options[0].classList.contains('disabled')) return;
+
+  options.forEach(opt => opt.classList.remove('selected'));
+  options[index].classList.add('selected');
+  selectedFinal = index;
+}
+
+function checkFinalAnswer() {
+  if (selectedFinal === null) {
+    alert('אנא בחר תשובה');
+    return;
+  }
+
+  const options = document.querySelectorAll('#options-final .option');
+  const feedback = document.getElementById('feedback-final');
+  const btn = document.getElementById('btn-final');
+  const correctAnswer = 1; // ב - כיתות 1 ו-3
+
+  options.forEach((opt, i) => {
+    opt.classList.add('disabled');
+    if (i === correctAnswer) {
+      opt.classList.add('correct');
+    } else if (i === selectedFinal && selectedFinal !== correctAnswer) {
+      opt.classList.add('wrong');
+    }
+  });
+
+  btn.disabled = true;
+
+  if (selectedFinal === correctAnswer) {
+    feedback.innerHTML = '✓ נכון מצוין! כיתות 1 ו-3 הן היחידות עם יחס שווה של <strong>4:3</strong>';
+    feedback.classList.add('correct', 'show');
+
+    document.getElementById('summary-box').style.display = 'block';
+    document.getElementById('score-container').style.display = 'block';
+
+    for (let i = 0; i < 3; i++) {
+      setTimeout(createConfetti, i * 400);
+    }
+  } else {
+    feedback.innerHTML = '✗ לא נכון. השוו את היחסים המצומצמים: כיתה 1 = 4:3, כיתה 3 = 4:3. רק הם שווים!';
+    feedback.classList.add('wrong', 'show');
+
+    document.getElementById('summary-box').style.display = 'block';
+  }
+}
+
+function createConfetti() {
+  const c = document.getElementById('celebration');
+  const colors = ['#fde047', '#4ade80', '#2dd4bf', '#a3e635', '#22d3ee', '#f472b6', '#a78bfa'];
+  for (let i = 0; i < 25; i++) {
+    const d = document.createElement('div');
+    d.className = 'confetti';
+    d.style.left = Math.random() * 100 + '%';
+    d.style.background = colors[Math.floor(Math.random() * colors.length)];
+    d.style.animationDelay = Math.random() * 0.5 + 's';
+    c.appendChild(d);
+  }
+  setTimeout(() => { c.innerHTML = ''; }, 3000);
+}
+
+// Enter key support
+document.querySelectorAll('.ratio-input').forEach(input => {
+  input.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      const id = input.id;
+      const classNum = id.match(/\d/)[0];
+      const btn = document.getElementById('btn-' + classNum);
+      if (!btn.disabled) btn.click();
+    }
+  });
+});
+</script>
+
+</body>
+</html>
