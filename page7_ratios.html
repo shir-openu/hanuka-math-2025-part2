@@ -875,44 +875,38 @@
             checkCompletion();
         }
 
-        function checkOperation(operation) {
+function checkOperation(operation) {
             if (answered.operation) return;
-            answered.operation = true;
 
             const isCorrect = operation === 'multiply';
             const feedback = document.getElementById('feedback-operation');
             const buttons = document.querySelectorAll('.operation-btn');
 
+            // Clear previous styles
             buttons.forEach(btn => {
-                btn.disabled = true;
-                if (btn.textContent.includes('לכפול') && operation === 'multiply') {
-                    btn.classList.add(isCorrect ? 'selected-correct' : 'selected-incorrect');
-                } else if (btn.onclick.toString().includes(operation)) {
-                    btn.classList.add('selected-incorrect');
-                }
+                btn.classList.remove('selected-correct', 'selected-incorrect');
             });
+            feedback.classList.remove('show', 'correct', 'incorrect');
 
-            // Highlight correct answer
+            // Mark clicked button
             buttons.forEach(btn => {
-                if (btn.textContent.includes('לכפול')) {
-                    btn.classList.add('selected-correct');
+                if (btn.onclick.toString().includes(operation)) {
+                    btn.classList.add(isCorrect ? 'selected-correct' : 'selected-incorrect');
                 }
             });
 
             if (isCorrect) {
-                answered[letter] = true;
+                answered.operation = true;
                 correctCount++;
                 updateScore();
                 buttons.forEach(btn => btn.disabled = true);
-                checkCompletion();
                 feedback.textContent = 'נכון מאוד! כופלים את היחס 3:2 ב-2 ומקבלים 6:4, שזה בדיוק מספר הכדורים לכל קבוצה!';
                 feedback.classList.add('show', 'correct');
+                checkCompletion();
             } else {
-                feedback.textContent = 'התשובה הנכונה היא לכפול ב-2. כי 10÷5=2, וכש כופלים 3:2 ב-2 מקבלים 6:4.';
+                feedback.textContent = 'לא נכון, נסו שוב. רמז: כמה פעמים 5 נכנס ב-10?';
                 feedback.classList.add('show', 'incorrect');
             }
-
-            checkCompletion();
         }
 
         function showHint(id) {

@@ -602,7 +602,6 @@ function checkTF(id, isCorrectButton, btn) {
     btn.classList.add('wrong-answer');
     resultSpan.textContent = '✗';
     resultSpan.style.color = 'var(--red)';
-    explainBox.classList.add('show');
   }
 }
 
@@ -640,6 +639,7 @@ function checkEquation(id) {
     input.classList.remove('wrong');
     input.classList.add('correct');
     section.classList.add('correct');
+    explainBox.classList.add('show');
     hintBox.classList.remove('show');
     successMsg.classList.add('show');
     explainBox.classList.add('show');
@@ -654,10 +654,6 @@ function checkEquation(id) {
     const hintIndex = Math.min(attempts[id] - 1, hints[id].length - 1);
     let hintText = '💡 רמז ' + attempts[id] + ': ' + hints[id][hintIndex];
 
-    if (attempts[id] >= 4) {
-      if (id === 'f1') hintText += '<br>🎯 התשובה: -0.5x+2';
-      if (id === 'f2') hintText += '<br>🎯 התשובה: 12x+12';
-    }
 
     hintBox.innerHTML = hintText;
     hintBox.classList.add('show');
@@ -684,6 +680,7 @@ function checkOrder() {
   // Correct order: CEO (4) < ADE (5) < BDE (10)
   if (g1 === 'CEO' && g2 === 'ADE' && g3 === 'BDE') {
     section.classList.add('correct');
+    explainBox.classList.add('show');
     hintBox.classList.remove('show');
     successMsg.classList.add('show');
     explainBox.classList.add('show');
@@ -713,6 +710,7 @@ function checkLine(id, correct) {
     input.classList.remove('wrong');
     input.classList.add('correct');
     section.classList.add('correct');
+    explainBox.classList.add('show');
     hintBox.classList.remove('show');
     successMsg.classList.add('show');
     explainBox.classList.add('show');
@@ -727,9 +725,6 @@ function checkLine(id, correct) {
     const hintIndex = Math.min(attempts[id] - 1, (hints[id] || []).length - 1);
     let hintText = '💡 רמז: ' + (hints[id] ? hints[id][hintIndex] : 'נסו שוב');
 
-    if (attempts[id] >= 3) {
-      hintText += '<br>🎯 התשובה: ' + correct;
-    }
 
     hintBox.innerHTML = hintText;
     hintBox.classList.add('show');
